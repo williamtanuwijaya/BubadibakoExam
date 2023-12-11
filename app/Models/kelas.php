@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class mata_pelajaran extends Model
+class kelas extends Model
 {
     use HasFactory;
 
@@ -15,16 +15,6 @@ class mata_pelajaran extends Model
      * @var array
      */
     protected $fillable = [
-        'nama_mapel',
+        'nama_kelas',
     ];
-
-     /**
-     * mata_pelajaran
-     *
-     * @return void
-     */
-    public function mata_pelajaran()
-    {
-        return $this->belongsTo(mata_pelajaran::class);
-    }
 }
