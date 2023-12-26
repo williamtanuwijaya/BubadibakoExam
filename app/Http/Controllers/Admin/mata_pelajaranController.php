@@ -15,15 +15,15 @@ class mata_pelajaranController extends Controller
      */
     public function index()
     {
-        //get mata_pelajarans
-        $mata_pelajarans = mata_pelajaran::when(request()->q, function($mata_pelajarans) {
-            $mata_pelajarans = $mata_pelajarans->where('title', 'like', '%'. request()->q . '%');
+        // Get mata_pelajarans
+        $mata_pelajarans = mata_pelajaran::when(request()->q, function ($query) {
+            $query->where('nama_mapel', 'like', '%' . request()->q . '%');
         })->latest()->paginate(5);
 
-        //append query string to pagination links
+        // Append query string to pagination links
         $mata_pelajarans->appends(['q' => request()->q]);
 
-        //render with inertia
+        // Render with inertia
         return inertia('Admin/mata_pelajaran/Index', [
             'mata_pelajarans' => $mata_pelajarans,
         ]);
@@ -42,38 +42,38 @@ class mata_pelajaranController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //validate request
+        // Validate request
         $request->validate([
-            'title' => 'required|string|unique:mata_pelajarans',
+            'nama_mapel' => 'required|string|unique:mata_pelajarans',
         ]);
 
-        //create mata_pelajaran
+        // Create mata_pelajaran
         mata_pelajaran::create([
-            'title' => $request->title,
+            'nama_mapel' => $request->nama_mapel,
         ]);
 
-        //redirect
+        // Redirect
         return redirect()->route('admin.mata_pelajaran.index');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id_mapel
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id_mapel)
     {
-        //get mata_pelajaran
-        $mata_pelajaran = mata_pelajaran::findOrFail($id);
+        // Get mata_pelajaran
+        $mata_pelajaran = mata_pelajaran::findOrFail($id_mapel);
 
-        //render with inertia
-        return inertia('Admin/mata_palajaran/Edit', [
+        // Render with inertia
+        return inertia('Admin/mata_pelajaran/Edit', [
             'mata_pelajaran' => $mata_pelajaran,
         ]);
     }
@@ -81,41 +81,41 @@ class mata_pelajaranController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id_mapel
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, mata_pelajaran $mata_pelajaran)
     {
-        //validate request
+        // Validate request
         $request->validate([
-            'title' => 'required|string|unique:mata_pelajarans,title,'.$mata_pelajaran->id,
+            'nama_mapel' => 'required|string|unique:mata_pelajarans,nama_mapel,' . $mata_pelajaran->id_mapel,
         ]);
 
-        //update mata_pelajaran
+        // Update mata_pelajaran
         $mata_pelajaran->update([
-            'title' => $request->title,
+            'nama_mapel' => $request->nama_mapel,
         ]);
 
-        //redirect
-        return redirect()->route('admin.mata_pelajarans.index');
+        // Redirect
+        return redirect()->route('admin.mata_pelajaran.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id_mapel
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id_mapel)
     {
-        //get mata_pelajaran
-        $mata_pelajaran = mata_pelajaran::findOrFail($id);
+        // Get mata_pelajaran
+        $mata_pelajaran = mata_pelajaran::findOrFail($id_mapel);
 
-        //delete mata_pelajaran
+        // Delete mata_pelajaran
         $mata_pelajaran->delete();
 
-        //redirect
-        return redirect()->route('admin.mata_pelajarans.index');
+        // Redirect
+        return redirect()->route('admin.mata_pelajaran.index');
     }
 }

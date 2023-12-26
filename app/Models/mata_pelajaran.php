@@ -9,8 +9,15 @@ class mata_pelajaran extends Model
 {
     use HasFactory;
 
-     /**
-     * fillable
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id_mapel';
+
+    /**
+     * The attributes that are mass assignable.
      *
      * @var array
      */
@@ -18,10 +25,10 @@ class mata_pelajaran extends Model
         'nama_mapel',
     ];
 
-     /**
-     * mata_pelajaran
+    /**
+     * Relationship with itself.
      *
-     * @return void
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function mata_pelajaran()
     {

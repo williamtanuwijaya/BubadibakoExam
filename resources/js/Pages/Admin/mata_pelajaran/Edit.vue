@@ -5,23 +5,24 @@
     <div class="container-fluid mb-5 mt-5">
         <div class="row">
             <div class="col-md-12">
-                <Link href="/admin/mata_pelajarans" class="btn btn-md btn-primary border-0 shadow mb-3" type="button"><i class="fa fa-long-arrow-alt-left me-2"></i> Kembali</Link>
+                <Link href="/admin/mata_pelajaran" class="btn btn-md btn-primary border-0 shadow mb-3" type="button">
+                    <i class="fa fa-long-arrow-alt-left me-2"></i> Kembali
+                </Link>
                 <div class="card border-0 shadow">
                     <div class="card-body">
                         <h5><i class="fa fa-bookmark"></i> Edit Pelajaran</h5>
                         <hr>
                         <form @submit.prevent="submit">
-                        
-                            <div class="mb-4">
-                                <label>Nama Pelajaran</label> 
-                                <input type="text" class="form-control" placeholder="Masukkan Nama Pelajaran" v-model="form.title">
-                                
-                                <div v-if="errors.title" class="alert alert-danger mt-2">
-                                    {{ errors.title }}
-                                </div>
 
+                            <div class="mb-4">
+                                <label>Nama Pelajaran</label>
+                                <input type="text" class="form-control" placeholder="Masukkan Nama Pelajaran" v-model="form.nama_mapel">
+
+                                <div v-if="errors.nama_mapel" class="alert alert-danger mt-2">
+                                    {{ errors.nama_mapel }}
+                                </div>
                             </div>
-                            
+
                             <button type="submit" class="btn btn-md btn-primary border-0 shadow me-2">Update</button>
                             <button type="reset" class="btn btn-md btn-warning border-0 shadow">Reset</button>
                         </form>
@@ -33,59 +34,57 @@
 </template>
 
 <script>
-    //import layout
-    import LayoutAdmin from '../../../Layouts/Admin.vue';
+// import layout
+import LayoutAdmin from '../../../Layouts/Admin.vue';
 
-    //import Heade and Link from Inertia
-    import {
+// import Head and Link from Inertia
+import {
+    Head,
+    Link
+} from '@inertiajs/inertia-vue3';
+
+// import reactive from vue
+import { reactive } from 'vue';
+
+// import inertia adapter
+import { Inertia } from '@inertiajs/inertia';
+
+// import sweet alert2
+import Swal from 'sweetalert2';
+
+export default {
+    // layout
+    layout: LayoutAdmin,
+
+    // register components
+    components: {
         Head,
         Link
-    } from '@inertiajs/inertia-vue3';
+    },
 
-    //import reactive from vue
-    import { reactive } from 'vue';
+    // props
+    props: {
+        errors: Object,
+        mata_pelajaran: Object
+    },
 
-    //import inerita adapter
-    import { Inertia } from '@inertiajs/inertia';
+    // initialization of the composition API
+    setup(props) {
+        // define form with reactive
+        const form = reactive({
+            nama_mapel: props.mata_pelajaran.nama_mapel,
+        });
 
-    //import sweet alert2
-    import Swal from 'sweetalert2';
-
-    export default {
-
-        //layout
-        layout: LayoutAdmin,
-
-        //register components
-        components: {
-            Head,
-            Link
-        },
-
-        //props
-        props: {
-            errors: Object,
-            mata_pelajaran: Object
-        },
-
-        //inisialisasi composition API
-        setup(props) {
-
-            //define form with reactive
-            const form = reactive({
-                title: props.mata_pelajaran.title,
-            });
-
-            //method "submit"
-            const submit = () => {
-
-                //send data to server
-                Inertia.put(`/admin/mata_palajarans/${props.mata_pelajaran.id}`, {
-                    //data
-                    title: form.title,
+        const submit = () => {
+            // Check if mata_pelajaran ID is defined
+            if (props.mata_pelajaran && props.mata_pelajaran.id_mapel) {
+                // Send data to server
+                Inertia.put(`/admin/mata_pelajaran/${props.mata_pelajaran.id_mapel}`, {
+                    // Data
+                    nama_mapel: form.nama_mapel,
                 }, {
                     onSuccess: () => {
-                        //show success alert
+                        // Show success alert
                         Swal.fire({
                             title: 'Success!',
                             text: 'Pelajaran Berhasil Diupdate!.',
@@ -95,19 +94,18 @@
                         });
                     },
                 });
-
+            } else {
+                console.error('mata_pelajaran ID is undefined');
             }
-						
-						//return
-            return {
-                form,
-                submit,
-            }
-
         }
 
+        // return
+        return {
+            form,
+            submit,
+        }
     }
-
+}
 </script>
 
 <style>
