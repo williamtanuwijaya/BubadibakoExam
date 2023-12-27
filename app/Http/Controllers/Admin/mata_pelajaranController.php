@@ -89,7 +89,7 @@ class mata_pelajaranController extends Controller
     {
         // Validate request
         $request->validate([
-            'nama_mapel' => 'required|string|unique:mata_pelajarans,nama_mapel,' . $mata_pelajaran->id_mapel,
+            'nama_mapel' => 'required|string|unique:mata_pelajarans,nama_mapel,' . $mata_pelajaran->id_mapel.',id_mapel',
         ]);
 
         // Update mata_pelajaran
