@@ -59,8 +59,8 @@
 
                 <li role="separator" class="dropdown-divider mt-2 mb-2 border-gray-700"></li>
 
-                <li class="nav-item" :class="{ 'active': $page.url.startsWith('/admin/mata_pelajarans') }">
-                    <Link href="/admin/mata_pelajarans" class="nav-link d-flex justify-content-between">
+                <li class="nav-item" :class="{ 'active': $page.url.startsWith('/admin/mata_pelajaran') }">
+                    <Link href="/admin/mata_pelajaran" class="nav-link d-flex justify-content-between">
                     <span>
                         <span class="sidebar-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
@@ -76,8 +76,8 @@
                     </Link>
                 </li>
 
-                <li class="nav-item" :class="{ 'active': $page.url.startsWith('/admin/classrooms') }">
-                    <Link href="/admin/classrooms" class="nav-link d-flex justify-content-between">
+                <li class="nav-item" :class="{ 'active': $page.url.startsWith('/admin/kelas') }">
+                    <Link href="/admin/kelas" class="nav-link d-flex justify-content-between">
                     <span>
                         <span class="sidebar-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
