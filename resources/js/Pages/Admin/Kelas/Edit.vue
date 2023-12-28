@@ -13,15 +13,15 @@
                         <form @submit.prevent="submit">
 
                             <div class="mb-4">
-                                <label>Nama Kelas</label> 
+                                <label>Nama Kelas</label>
                                 <input type="text" class="form-control" placeholder="Masukkan Nama Kelas" v-model="form.nama_kelas">
-                                
+
                                 <div v-if="errors.nama_kelas" class="alert alert-danger mt-2">
                                     {{ errors.nama_kelas }}
                                 </div>
 
                             </div>
-                            
+
                             <button type="submit" class="btn btn-md btn-primary border-0 shadow me-2">Update</button>
                             <button type="reset" class="btn btn-md btn-warning border-0 shadow">Reset</button>
                         </form>
@@ -74,17 +74,19 @@
             //define form with reactive
             const form = reactive({
                 nama_kelas: props.kelas.nama_kelas,
+                id_kelas: props.kelas.id_kelas
             });
 
             //method "submit"
             const submit = () => {
-                
-    
+
+
                 //send data to server
                 Inertia.put(`/admin/kelas/${props.kelas.id_kelas}`, {
                     //data
                     nama_kelas: form.nama_kelas,
-                      
+                    id_kelas: form.id_kelas
+
                 }, {
                     onSuccess: () => {
                         //show success alert

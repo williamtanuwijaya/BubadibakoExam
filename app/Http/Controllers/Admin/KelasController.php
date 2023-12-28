@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\kelas;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class kelasController extends Controller
 {
@@ -93,11 +94,9 @@ class kelasController extends Controller
             'nama_kelas' => 'required|string|unique:kelas,nama_kelas,'.$kelas->id_kelas.',id_kelas',
         ]);
 
-        //update kelas
-        $kelas->update([
-            'nama_kelas' => $request->nama_kelas,
-        ]);
-        
+        kelas::where('id_kelas', $request->id_kelas)
+            ->update(['nama_kelas' => $request->nama_kelas]);
+
         //redirect
         return redirect()->route('admin.kelas.index');
     }

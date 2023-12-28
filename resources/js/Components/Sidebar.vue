@@ -59,11 +59,8 @@
 
                 <li role="separator" class="dropdown-divider mt-2 mb-2 border-gray-700"></li>
 
-<<<<<<< HEAD
-                <li class="nav-item" :class="{ 'active': $page.url.startsWith('/admin/mata_pelajarans') }">
-=======
                 <li class="nav-item" :class="{ 'active': $page.url.startsWith('/admin/mata_pelajaran') }">
->>>>>>> 0880e6e13b1609129a4885ae4769468b09f72e5e
+
                     <Link href="/admin/mata_pelajaran" class="nav-link d-flex justify-content-between">
                     <span>
                         <span class="sidebar-icon">
