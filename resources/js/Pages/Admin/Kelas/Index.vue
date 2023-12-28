@@ -7,7 +7,7 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-3 col-12 mb-2">
-                        <Link href="/admin/kelass/create" class="btn btn-md btn-primary border-0 shadow w-100" type="button"><i
+                        <Link href="/admin/kelas/create" class="btn btn-md btn-primary border-0 shadow w-100" type="button"><i
                             class="fa fa-plus-circle"></i>
                         Tambah</Link>
                     </div>
@@ -44,8 +44,8 @@
                                         <td class="fw-bold text-center">{{ ++index + (kelass.current_page - 1) * kelass.per_page }}</td>
                                         <td>{{ kelas.nama_kelas }}</td>
                                         <td class="text-center">
-                                            <Link :href="`/admin/kelass/${kelas.id}/edit`" class="btn btn-sm btn-info border-0 shadow me-2" type="button"><i class="fa fa-pencil-alt"></i></Link>
-                                            <button @click.prevent="destroy(kelas.id)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
+                                            <Link :href="`/admin/kelas/${kelas.id_kelas}/edit`" class="btn btn-sm btn-info border-0 shadow me-2" type="button"><i class="fa fa-pencil-alt"></i></Link>
+                                            <button @click.prevent="destroy(kelas.id_kelas)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>

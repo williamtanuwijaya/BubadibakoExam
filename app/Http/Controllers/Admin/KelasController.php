@@ -83,7 +83,7 @@ class kelasController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $id_kelas
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, kelas $kelas)
@@ -97,7 +97,7 @@ class kelasController extends Controller
         $kelas->update([
             'nama_kelas' => $request->nama_kelas,
         ]);
-
+        
         //redirect
         return redirect()->route('admin.kelas.index');
     }
@@ -119,4 +119,7 @@ class kelasController extends Controller
         //redirect
         return redirect()->route('admin.kelas.index');
     }
+
+
+
 }
