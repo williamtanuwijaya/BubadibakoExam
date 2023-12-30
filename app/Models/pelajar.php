@@ -9,6 +9,7 @@ class pelajar extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id_pelajar';
        /**
      * fillable
      *
@@ -27,8 +28,8 @@ class pelajar extends Model
      *
      * @return void
      */
-    public function kelas()
+    public function classrooms()
     {
-        return $this->belongsTo(kelas::class);
+        return $this->belongsTo(kelas::class, 'id_kelas');
     }
 }
