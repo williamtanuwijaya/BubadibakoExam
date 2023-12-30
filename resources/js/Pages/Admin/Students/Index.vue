@@ -14,7 +14,7 @@
                                     Tambah</Link>
                             </div>
                             <div class="col-md-6 col-12 mb-2">
-                                <Link href="routes('admin.students.import')" class="btn btn-md btn-success border-0 shadow w-100 text-white"
+                                <Link href="/admin/students/import" class="btn btn-md btn-success border-0 shadow w-100 text-white"
                                       type="button"><i class="fa fa-file-excel"></i>
                                     Import</Link>
                             </div>
