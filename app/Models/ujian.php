@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ujian extends Model
 {
     use HasFactory;
-
+    protected $primaryKey = 'id_ujian';
     /**
      * fillable
      *
@@ -32,7 +32,7 @@ class ujian extends Model
      */
     public function mata_pelajaran()
     {
-        return $this->belongsTo(mata_pelajaran::class);
+        return $this->belongsTo(mata_pelajaran::class, 'id_mapel');
     }
 
     /**
@@ -42,7 +42,7 @@ class ujian extends Model
      */
     public function kelas()
     {
-        return $this->belongsTo(kelas::class);
+        return $this->belongsTo(kelas::class, 'id_kelas');
     }
 
       /**
@@ -50,8 +50,8 @@ class ujian extends Model
      *
      * @return void
      */
-    public function peertanyaan()
+    public function pertanyaan()
     {
-        return $this->hasMany(pertanyaan::class)->orderBy('id', 'DESC');
+        return $this->hasMany(pertanyaan::class, 'id_ujian','id_pertanyaan')->orderBy('id_pertanyaan', 'DESC');
     }
 }

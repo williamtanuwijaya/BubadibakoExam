@@ -27,9 +27,12 @@ Route::prefix('admin')->group(function() {
         Route::get('/dashboard', \App\Http\Controllers\Admin\DashboardController::class)->name('admin.dashboard');
         Route::resource('/mata_pelajaran', \App\Http\Controllers\Admin\mata_pelajaranController::class, ['as' => 'admin']);
         Route::resource('/kelas', \App\Http\Controllers\Admin\KelasController::class, ['as' => 'admin']);
+
         Route::get('/students/import', [\App\Http\Controllers\Admin\SiswaController::class, 'import'])->name('admin.students.import');
         Route::post('/students/import', [\App\Http\Controllers\Admin\SiswaController::class, 'storeImport'])->name('admin.students.storeImport');
         Route::resource('/students', \App\Http\Controllers\Admin\SiswaController::class, ['as' => 'admin']);
+
+        Route::resource('/exams', \App\Http\Controllers\Admin\UjianController::class, ['as' => 'admin']);
     });
 });
 
