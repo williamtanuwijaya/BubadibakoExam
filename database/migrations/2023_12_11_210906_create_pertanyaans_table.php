@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('pilihan_3')->nullable();
             $table->text('pilihan_4')->nullable();
             $table->text('pilihan_5')->nullable();
-            $table->integer('jawaban');  
+            $table->integer('jawaban');
             $table->timestamps();
         });
     }

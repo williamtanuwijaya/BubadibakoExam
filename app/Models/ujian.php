@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ujian extends Model
 {
     use HasFactory;
-    
+
     protected $primaryKey = 'id_ujian';
 
     protected $fillable = [
@@ -22,18 +22,18 @@ class ujian extends Model
         'hasil',
     ];
 
-    public function mataPelajaran()
+    public function mata_pelajaran()
     {
-        return $this->belongsTo(MataPelajaran::class, 'id_mapel', 'id_mapel');
+        return $this->belongsTo(mata_pelajaran::class, 'id_mapel', 'id_mapel');
     }
 
     public function kelas()
     {
-        return $this->belongsTo(Kelas::class, 'id_kelas', 'id_kelas');
+        return $this->belongsTo(kelas::class, 'id_kelas', 'id_kelas');
     }
 
     public function pertanyaan()
 {
-    return $this->hasMany(Pertanyaan::class, 'id_ujian', 'id_ujian');
+    return $this->hasMany(pertanyaan::class, 'id_ujian', 'id_ujian');
 }
 }
