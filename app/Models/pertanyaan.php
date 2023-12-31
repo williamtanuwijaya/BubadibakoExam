@@ -9,11 +9,8 @@ class pertanyaan extends Model
 {
     use HasFactory;
 
-        /**
-     * fillable
-     *
-     * @var array
-     */
+    protected $primaryKey = 'id_pertanyaan';
+
     protected $fillable = [
         'id_ujian',
         'pertanyaan',
@@ -25,13 +22,8 @@ class pertanyaan extends Model
         'jawaban',
     ];
 
-        /**
-     * exam
-     *
-     * @return void
-     */
     public function ujian()
-    {
-        return $this->belongsTo(ujian::class);
-    }
+{
+    return $this->belongsTo(ujian::class, 'id_pertanyaan', 'id_ujian');
+}
 }
