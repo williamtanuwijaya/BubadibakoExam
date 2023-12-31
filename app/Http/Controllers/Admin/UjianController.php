@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Imports\ImportDataPertanyaan;
+use App\Models\pertanyaan;
 use App\Models\ujian;
 use App\Models\mata_pelajaran;
 use App\Models\kelas;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UjianController extends Controller
 {
@@ -98,8 +101,8 @@ class UjianController extends Controller
         //get exam
         $exam = ujian::with('mata_pelajaran', 'kelas')->findOrFail($id_ujian);
 
-        //get relation questions with pagination
-        $exam->setRelation('pertanyaan', $exam->pertanyaan()->paginate(5));
+        //get relation pertanyaans with pagination
+        $exam->setRelation('pertanyaan', $exam->pertanyaan()->paginate(5, ['*'], 'page_pertanyaan'));
 
         //render with inertia
         return inertia('Admin/Exams/Show', [
@@ -186,4 +189,152 @@ class UjianController extends Controller
         //redirect
         return redirect()->route('admin.exams.index');
     }
+
+    /**
+     * createpertanyaan
+     *
+     * @param  mixed $exam
+     * @return void
+     */
+    public function createQuestion(ujian $exam)
+    {
+        //render with inertia
+        return inertia('Admin/Questions/Create', [
+            'exam' => $exam,
+        ]);
+    }
+    
+    /**
+     * storepertanyaan
+     *
+     * @param  mixed $request
+     * @param  mixed $exam
+     * @return void
+     */
+    public function storeQuestion(Request $request, ujian $exam)
+{
+    //validate request
+    $request->validate([
+        'pertanyaan' => 'required',
+        'pilihan_1' => 'required',
+        'pilihan_2' => 'required',
+        'pilihan_3' => 'required',
+        'pilihan_4' => 'required',
+        'pilihan_5' => 'required',
+        'jawaban' => 'required',
+    ]);
+
+    //create pertanyaan
+    pertanyaan::create([
+        'id_ujian' => $exam->id_ujian,
+        'pertanyaan' => $request->pertanyaan,
+        'pilihan_1' => $request->pilihan_1,
+        'pilihan_2' => $request->pilihan_2,
+        'pilihan_3' => $request->pilihan_3,
+        'pilihan_4' => $request->pilihan_4,
+        'pilihan_5' => $request->pilihan_5,
+        'jawaban' => $request->jawaban,
+    ]);
+
+    //redirect
+    return redirect()->route('admin.exams.show', $exam->id_ujian);
 }
+    /**
+     * editQuestion
+     *
+     * @param  mixed $exam
+     * @param  mixed $question
+     * @return void
+     */
+    public function editQuestion(ujian $exam, pertanyaan $question)
+    {
+        //render with inertia
+        return inertia('Admin/Questions/Edit', [
+            'exam' => $exam,
+            'question' => $question,
+        ]);
+    }
+
+    /**
+     * updateQuestion
+     *
+     * @param  mixed $request
+     * @param  mixed $exam
+     * @param  mixed $question
+     * @return void
+     */
+    public function updateQuestion(Request $request, ujian $exam, pertanyaan $question)
+    {
+        //validate request
+        $request->validate([
+            'pertanyaan'          => 'required',
+            'pilihan_1'          => 'required',
+            'pilihan_2'          => 'required',
+            'pilihan_3'          => 'required',
+            'pilihan_4'          => 'required',
+            'pilihan_5'          => 'required',
+            'jawaban'            => 'required',
+        ]);
+        
+        //update question
+        $question->update([
+            'pertanyaan'          => $request->pertanyaan,
+            'pilihan_1'          => $request->pilihan_1,
+            'pilihan_2'          => $request->pilihan_2,
+            'pilihan_3'          => $request->pilihan_3,
+            'pilihan_4'          => $request->pilihan_4,
+            'pilihan_5'          => $request->pilihan_5,
+            'jawaban'            => $request->jawaban,
+        ]);
+        
+        //redirect
+        return redirect()->route('admin.exams.show', $exam->id_ujian);
+    }
+    /**
+     * destroyQuestion
+     *
+     * @param  mixed $exam
+     * @param  mixed $question
+     * @return void
+     */
+    public function destroyQuestion(ujian $exam, pertanyaan $question)
+    {
+        //delete question
+        $question->delete();
+        
+        //redirect
+        return redirect()->route('admin.exams.show', $exam->id_ujian);
+    }
+
+    /**
+     * import
+     *
+     * @return void
+     */
+    public function import(ujian $exam)
+    {
+        return inertia('Admin/Questions/Import', [
+            'exam' => $exam
+        ]);
+    }
+    
+    /**
+     * storeImport
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function storeImport(Request $request, ujian $exam)
+    {
+        $this->validate($request, [
+            'file' => 'required|mimes:csv,xls,xlsx'
+        ]);
+
+        // import data
+        Excel::import(new ImportDataPertanyaan(), $request->file('file'));
+
+        //redirect
+        return redirect()->route('admin.exams.show', $exam->id_ujian);
+    }
+}
+
