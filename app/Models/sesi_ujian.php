@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class sesi_ujian extends Model
 {
     use HasFactory;
-
+    protected $primaryKey = 'id_sesi_ujian';
         /**
      * fillable
      *
@@ -28,16 +28,17 @@ class sesi_ujian extends Model
      */
     public function kelompok_ujian()
     {
-        return $this->hasMany(kelompok_ujian::class);
+        return $this->hasMany(kelompok_ujian::class, 'id_kelompok_ujian', 'id_kelompok_ujian');
     }
 
-     /**
+    /**
      * ujian
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+
     public function ujian()
     {
-        return $this->belongsTo(ujian::class);
+        return $this->belongsTo(ujian::class, 'id_ujian', 'id_ujian');
     }
 }
