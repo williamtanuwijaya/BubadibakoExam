@@ -67,11 +67,19 @@
                                 </thead>
                                 <div class="mt-2"></div>
                                 <tbody>
-
+                                <tr v-for="(data, index) in exam_session.kelompok_ujians.data" :key="index">
+                                    <td class="fw-bold text-center">{{ ++index + (exam_session.kelompok_ujians.current_page - 1) * exam_session.kelompok_ujians.per_page }}</td>
+                                    <td>{{ data.student.nama }}</td>
+                                    <td class="text-center">{{ data.student.classroom.nama_kelas }}</td>
+                                    <td class="text-center">{{ data.student.jenis_kelamin }}</td>
+                                    <td class="text-center">
+                                        <button @click.prevent="destroy(exam_session.id_sesi_ujian, data.id_sesi_ujian)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
-
+                        <Pagination :links="exam_session.kelompok_ujians.links" align="end" />
                     </div>
                 </div>
 
@@ -83,6 +91,9 @@
 <script>
 //import layout
 import LayoutAdmin from '../../../Layouts/Admin.vue';
+
+//import component pagination
+import Pagination from '../../../Components/Pagination.vue';
 
 //import Heade and Link from Inertia
 import {
@@ -99,6 +110,7 @@ export default {
     components: {
         Head,
         Link,
+        Pagination
     },
 
     //props

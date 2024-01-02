@@ -67,6 +67,11 @@ Route::prefix('admin')->group(function() {
         //route resource exams
         Route::resource('/exams', \App\Http\Controllers\Admin\UjianController::class, ['as' => 'admin']);
 
+        //custom route for enrolle create
+        Route::get('/exam_sessions/{exam_session}/enrolle/create', [\App\Http\Controllers\Admin\SesiUjianController::class, 'createEnrolle'])->name('admin.exam_sessions.createEnrolle');
+
+        //custom route for enrolle store
+        Route::post('/exam_sessions/{exam_session}/enrolle/store', [\App\Http\Controllers\Admin\SesiUjianController::class, 'storeEnrolle'])->name('admin.exam_sessions.storeEnrolle');
         //route resource exam_sessions
         Route::resource('/exam_sessions', \App\Http\Controllers\Admin\SesiUjianController::class, ['as' => 'admin']);
     });

@@ -28,7 +28,7 @@ class pelajar extends Model
      *
      * @return void
      */
-    public function classrooms()
+    public function kelas()
     {
         return $this->belongsTo(kelas::class, 'id_kelas');
     }

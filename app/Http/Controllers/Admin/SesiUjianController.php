@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\kelompok_ujian;
+use App\Models\pelajar;
 use App\Models\ujian;
 use App\Models\sesi_ujian;
 use Illuminate\Http\Request;
@@ -47,25 +49,25 @@ class SesiUjianController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //validate request
         $request->validate([
-            'sesi_ujian'         => 'required',
-            'id_ujian'       => 'required',
-            'waktu_mulai'    => 'required',
-            'waktu_selesai'      => 'required',
+            'sesi_ujian' => 'required',
+            'id_ujian' => 'required',
+            'waktu_mulai' => 'required',
+            'waktu_selesai' => 'required',
         ]);
 
         //create exam_session
         sesi_ujian::create([
-            'sesi_ujian'         => $request->sesi_ujian,
-            'id_ujian'       => $request->id_ujian,
-            'waktu_mulai'    => date('Y-m-d H:i:s', strtotime($request->waktu_mulai)),
-            'waktu_selesai'      => date('Y-m-d H:i:s', strtotime($request->waktu_selesai)),
+            'sesi_ujian' => $request->sesi_ujian,
+            'id_ujian' => $request->id_ujian,
+            'waktu_mulai' => date('Y-m-d H:i:s', strtotime($request->waktu_mulai)),
+            'waktu_selesai' => date('Y-m-d H:i:s', strtotime($request->waktu_selesai)),
         ]);
 
         //redirect
@@ -75,7 +77,7 @@ class SesiUjianController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $exam_session
+     * @param int $id_sesi_ujian
      * @return \Illuminate\Http\Response
      */
     public function show($id_sesi_ujian)
@@ -84,18 +86,18 @@ class SesiUjianController extends Controller
         $exam_session = sesi_ujian::with('ujian.kelas', 'ujian.mata_pelajaran')->findOrFail($id_sesi_ujian);
 
         //get relation exam_groups with pagination
-        $exam_session->setRelation('ujian.kelompok_ujian', $exam_session->kelompok_ujian()->with('pelajar.classrooms')->paginate(5));
+        $exam_session->setRelation('kelompok_ujians', $exam_session->kelompok_ujian()->with('pelajar.classrooms')->paginate(5));
 
         //render with inertia
         return inertia('Admin/ExamSessions/Show', [
-            'exam_session'  => $exam_session,
+            'exam_session' => $exam_session,
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id_sesi_ujian
+     * @param int $id_sesi_ujian
      * @return \Illuminate\Http\Response
      */
     public function edit($id_sesi_ujian)
@@ -108,34 +110,34 @@ class SesiUjianController extends Controller
 
         //render with inertia
         return inertia('Admin/ExamSessions/Edit', [
-            'exam_session'  => $exam_session,
-            'exams'         => $exams,
+            'exam_session' => $exam_session,
+            'exams' => $exams,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id_sesi_ujian
+     * @param \Illuminate\Http\Request $request
+     * @param int $id_sesi_ujian
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, sesi_ujian $exam_session)
     {
         //validate request
         $request->validate([
-            'sesi_ujian'         => 'required',
-            'id_ujian'       => 'required',
-            'waktu_mulai'    => 'required',
-            'waktu_selesai'      => 'required',
+            'sesi_ujian' => 'required',
+            'id_ujian' => 'required',
+            'waktu_mulai' => 'required',
+            'waktu_selesai' => 'required',
         ]);
 
         //update exam_session
         $exam_session->update([
-            'sesi_ujian'         => $request->sesi_ujian,
-            'id_ujian'       => $request->id_ujian,
-            'waktu_mulai'    => date('Y-m-d H:i:s', strtotime($request->waktu_mulai)),
-            'waktu_selesai'      => date('Y-m-d H:i:s', strtotime($request->waktu_selesai)),
+            'sesi_ujian' => $request->sesi_ujian,
+            'id_ujian' => $request->id_ujian,
+            'waktu_mulai' => date('Y-m-d H:i:s', strtotime($request->waktu_mulai)),
+            'waktu_selesai' => date('Y-m-d H:i:s', strtotime($request->waktu_selesai)),
         ]);
 
         //redirect
@@ -145,7 +147,7 @@ class SesiUjianController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id_sesi_ujian
+     * @param int $id_sesi_ujian
      * @return \Illuminate\Http\Response
      */
     public function destroy($id_sesi_ujian)
@@ -158,5 +160,60 @@ class SesiUjianController extends Controller
 
         //redirect
         return redirect()->route('admin.exam_sessions.index');
+    }
+
+    /**
+     * createEnrolle
+     *
+     * @param mixed $exam_session
+     * @return void
+     */
+    public function createEnrolle(sesi_ujian $exam_session)
+    {
+        //get exams
+        $exam = $exam_session->ujian;
+
+        //get students already enrolled
+//        $students_enrolled = kelompok_ujian::where('id_ujian', $exam->id_sesi_ujian)->where('id_sesi_ujian', $exam_session->id_ujian)->pluck('id_pelajar')->all();
+
+        $students = pelajar::with('kelas')->get();
+
+        //render with inertia
+        return inertia('Admin/ExamGroups/Create', [
+            'exam' => $exam,
+            'exam_session' => $exam_session,
+            'students' => $students,
+        ]);
+    }
+
+    /**
+     * storeEnrolle
+     *
+     * @param mixed $exam_session
+     * @return void
+     */
+    public function storeEnrolle(Request $request, sesi_ujian $exam_session)
+    {
+        //validate request
+        $request->validate([
+            'id_pelajar' => 'required',
+        ]);
+
+        //create exam_group
+        foreach ($request->id_pelajar as $id_pelajar) {
+
+            //select student
+            $student = pelajar::findOrFail($id_pelajar);
+
+            //create exam_group
+            kelompok_ujian::create([
+                'id_ujian' => $request->id_ujian,
+                'id_sesi_ujian' => $exam_session->id_sesi_ujian,
+                'id_pelajar' => $student->id_pelajar,
+            ]);
+        }
+
+        //redirect
+        return redirect()->route('admin.exam_sessions.show', $exam_session->id_sesi_ujian);
     }
 }
