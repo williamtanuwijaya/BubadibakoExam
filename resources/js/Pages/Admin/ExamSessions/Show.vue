@@ -73,7 +73,7 @@
                                     <td class="text-center">{{ data.pelajar.classrooms.nama_kelas }}</td>
                                     <td class="text-center">{{ data.pelajar.jenis_kelamin }}</td>
                                     <td class="text-center">
-                                        <button @click.prevent="destroy(exam_session.id_sesi_ujian, data.id_sesi_ujian)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
+                                        <button @click.prevent="destroy(exam_session.id_sesi_ujian, data.id_kelompok_ujian)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -141,7 +141,7 @@ export default {
                 .then((result) => {
                     if (result.isConfirmed) {
 
-                        Inertia.delete(`/admin/exam_sessions/${id_sesi_ujian}/enrolle/${id_kelompok_ujian   }/destroy`);
+                        Inertia.delete(`/admin/exam_sessions/${id_sesi_ujian}/enrolle/${id_kelompok_ujian}/destroy`);
 
                         Swal.fire({
                             title: 'Deleted!',
