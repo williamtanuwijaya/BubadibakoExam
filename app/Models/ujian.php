@@ -33,7 +33,7 @@ class ujian extends Model
     }
 
     public function pertanyaan()
-{
-    return $this->hasMany(pertanyaan::class, 'id_ujian', 'id_ujian');
-}
+    {
+        return $this->hasMany(pertanyaan::class, 'id_ujian', 'id_ujian');
+    }
 }

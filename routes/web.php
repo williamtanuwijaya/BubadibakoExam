@@ -78,5 +78,14 @@ Route::prefix('admin')->group(function() {
 
         //route resource exam_sessions
         Route::resource('/exam_sessions', \App\Http\Controllers\Admin\SesiUjianController::class, ['as' => 'admin']);
+
+        //route index reports
+        Route::get('/reports', [\App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.reports.index');
+
+        //route index reports filter
+        Route::get('/reports/filter', [\App\Http\Controllers\Admin\LaporanController::class, 'filter'])->name('admin.reports.filter');
+
+        //route index reports export
+        Route::get('/reports/export', [\App\Http\Controllers\Admin\LaporanController::class, 'export'])->name('admin.reports.export');
     });
 });
