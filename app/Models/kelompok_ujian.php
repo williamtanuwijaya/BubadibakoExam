@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class kelompok_ujian extends Model
 {
     use HasFactory;
+
     protected $primaryKey = 'id_kelompok_ujian';
-      /**
-     * fillable
+
+    /**
+     * Fillable attributes.
      *
      * @var array
      */
@@ -20,8 +22,8 @@ class kelompok_ujian extends Model
         'id_pelajar',
     ];
 
-      /**
-     * ujian
+    /**
+     * Relationship with 'ujian' model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -30,23 +32,23 @@ class kelompok_ujian extends Model
         return $this->belongsTo(ujian::class, 'id_ujian');
     }
 
-      /**
-     * sesi_ujian
+    /**
+     * Relationship with 'sesi_ujian' model.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function sesi_ujian()
     {
-        return $this->belongsTo(sesi_ujian::class, 'id_sesi_ujian');
+        return $this->belongsTo(sesi_ujian::class, 'id_sesi_ujian', 'id_sesi_ujian');
     }
 
     /**
-     * peelajar
+     * Relationship with 'pelajar' model.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function pelajar()
     {
-        return $this->belongsTo(pelajar::class);
+        return $this->belongsTo(pelajar::class, 'id_pelajar');
     }
 }

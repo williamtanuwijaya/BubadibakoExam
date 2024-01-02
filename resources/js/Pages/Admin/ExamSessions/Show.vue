@@ -69,9 +69,9 @@
                                 <tbody>
                                 <tr v-for="(data, index) in exam_session.kelompok_ujians.data" :key="index">
                                     <td class="fw-bold text-center">{{ ++index + (exam_session.kelompok_ujians.current_page - 1) * exam_session.kelompok_ujians.per_page }}</td>
-                                    <td>{{ data.student.nama }}</td>
-                                    <td class="text-center">{{ data.student.classroom.nama_kelas }}</td>
-                                    <td class="text-center">{{ data.student.jenis_kelamin }}</td>
+                                    <td>{{ data.pelajar.nama }}</td>
+                                    <td class="text-center">{{ data.pelajar.classrooms.nama_kelas }}</td>
+                                    <td class="text-center">{{ data.pelajar.jenis_kelamin }}</td>
                                     <td class="text-center">
                                         <button @click.prevent="destroy(exam_session.id_sesi_ujian, data.id_sesi_ujian)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
                                     </td>
@@ -94,6 +94,12 @@ import LayoutAdmin from '../../../Layouts/Admin.vue';
 
 //import component pagination
 import Pagination from '../../../Components/Pagination.vue';
+
+//import inertia adapter
+import { Inertia } from '@inertiajs/inertia';
+
+//import sweet alert2
+import Swal from 'sweetalert2';
 
 //import Heade and Link from Inertia
 import {
@@ -118,7 +124,42 @@ export default {
         errors: Object,
         exam_session: Object,
     },
+    //inisialisasi composition API
+    setup() {
 
+        //define method destroy
+        const destroy = (id_sesi_ujian, id_kelompok_ujian) => {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda tidak akan dapat mengembalikan ini!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+
+                        Inertia.delete(`/admin/exam_sessions/${id_sesi_ujian}/enrolle/${id_kelompok_ujian   }/destroy`);
+
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Siswa Berhasil Dihapus!.',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false,
+                        });
+                    }
+                })
+        }
+
+        //return
+        return {
+            destroy,
+        }
+
+    }
 }
 
 </script>

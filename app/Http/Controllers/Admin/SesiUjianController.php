@@ -87,7 +87,7 @@ class SesiUjianController extends Controller
 
         //get relation exam_groups with pagination
         $exam_session->setRelation('kelompok_ujians', $exam_session->kelompok_ujian()->with('pelajar.classrooms')->paginate(5));
-
+//        dd($exam_session->kelompok_ujians);
         //render with inertia
         return inertia('Admin/ExamSessions/Show', [
             'exam_session' => $exam_session,
@@ -212,6 +212,22 @@ class SesiUjianController extends Controller
                 'id_pelajar' => $student->id_pelajar,
             ]);
         }
+
+        //redirect
+        return redirect()->route('admin.exam_sessions.show', $exam_session->id_sesi_ujian);
+    }
+
+    /**
+     * destroyEnrolle
+     *
+     * @param  mixed $exam_session
+     * @param  mixed $exam_group
+     * @return void
+     */
+    public function destroyEnrolle(sesi_ujian $exam_session, kelompok_ujian $exam_group)
+    {
+        //delete exam_group
+        $exam_group->delete();
 
         //redirect
         return redirect()->route('admin.exam_sessions.show', $exam_session->id_sesi_ujian);

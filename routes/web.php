@@ -72,6 +72,10 @@ Route::prefix('admin')->group(function() {
 
         //custom route for enrolle store
         Route::post('/exam_sessions/{exam_session}/enrolle/store', [\App\Http\Controllers\Admin\SesiUjianController::class, 'storeEnrolle'])->name('admin.exam_sessions.storeEnrolle');
+
+        //custom route for enrolle destroy
+        Route::delete('/exam_sessions/{exam_session}/enrolle/{exam_group}/destroy', [\App\Http\Controllers\Admin\SesiUjianController::class, 'destroyEnrolle'])->name('admin.exam_sessions.destroyEnrolle');
+
         //route resource exam_sessions
         Route::resource('/exam_sessions', \App\Http\Controllers\Admin\SesiUjianController::class, ['as' => 'admin']);
     });
