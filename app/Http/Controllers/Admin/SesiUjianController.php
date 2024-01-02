@@ -174,19 +174,9 @@ class SesiUjianController extends Controller
         $exam = $exam_session->ujian;
 
         //get students already enrolled
-        $students_enrolled = kelompok_ujian::where('id_ujian', $exam->id_sesi_ujian)->where('id_sesi_ujian', $exam_session->id_ujian)->pluck('id_pelajar')->all();
-//        $students_enrolled = kelompok_ujian::where('id_ujian', $exam->id_sesi_ujian)
-//            ->where('id_sesi_ujian', $exam_session->id_ujian)
-//            ->pluck('id_pelajar')
-//            ->toArray();
+//        $students_enrolled = kelompok_ujian::where('id_ujian', $exam->id_sesi_ujian)->where('id_sesi_ujian', $exam_session->id_ujian)->pluck('id_pelajar')->all();
 
         $students = pelajar::with('kelas')->get();
-//        $students_enrolled = kelompok_ujian::where('id_ujian', $exam->id_sesi_ujian)->where('id_sesi_ujian', $exam_session->id_ujian)->pluck('id_pelajar')->toArray();
-        //get students
-//        $students = pelajar::with('kelas')->where('id_kelas', $exam->id_pelajar)->whereNotIn('id_pelajar', $students_enrolled)->get();
-//        dd($students->toArray());
-
-
 
         //render with inertia
         return inertia('Admin/ExamGroups/Create', [
