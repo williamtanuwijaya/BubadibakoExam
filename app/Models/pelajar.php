@@ -28,7 +28,8 @@ class pelajar extends Model
      *
      * @return void
      */
-    public function kelas()
+    // Model pelajar.php
+    public function classrooms()
     {
         return $this->belongsTo(kelas::class, 'id_kelas');
     }

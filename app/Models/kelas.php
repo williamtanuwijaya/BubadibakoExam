@@ -17,4 +17,9 @@ class kelas extends Model
     protected $fillable = [
         'nama_kelas',
     ];
+
+    public function pelajar()
+    {
+        return $this->hasMany(pelajar::class, 'id_kelas');
+    }
 }

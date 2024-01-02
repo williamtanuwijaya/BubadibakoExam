@@ -28,7 +28,7 @@ class sesi_ujian extends Model
      */
     public function kelompok_ujian()
     {
-        return $this->hasMany(kelompok_ujian::class, 'id_kelompok_ujian', 'id_kelompok_ujian');
+        return $this->hasMany(kelompok_ujian::class, 'id_sesi_ujian', 'id_sesi_ujian');
     }
 
     /**
