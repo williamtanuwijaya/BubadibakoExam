@@ -191,5 +191,6 @@ class SiswaController extends Controller
 
         //redirect
         return redirect()->route('admin.students.index');
+
     }
 }
