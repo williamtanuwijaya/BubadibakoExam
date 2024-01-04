@@ -43,7 +43,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Waktu Mulai</label>
-                                        <Datepicker v-model="form.waktu_mulai" />
+                                        <Datepicker v-model="form.waktu_mulai" wrapper-class="custom-datepicker"/>
                                         <div v-if="errors.waktu_mulai" class="alert alert-danger mt-2">
                                             {{ errors.waktu_mulai }}
                                         </div>
@@ -165,5 +165,7 @@ export default {
 </script>
 
 <style>
-
+    .custom-datepicker{
+        width: 100%;
+    }
 </style>

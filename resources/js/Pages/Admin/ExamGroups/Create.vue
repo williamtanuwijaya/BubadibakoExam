@@ -29,15 +29,15 @@
                                     </thead>
                                     <div class="mt-3"></div>
                                     <tbody>
-                                    <tr v-for="student of students" :key="student.id_pelajar">
+                                    <tr v-for="student in students" :key="student.id_pelajar">
                                         <td>
-                                            <input type="checkbox" v-model="form.id_pelajar" :id="student.id_pelajar"
-                                                   :value="student.id_pelajar" number :checked="form.allSelected"/>
+                                            <input type="checkbox" v-model="form.id_pelajar" :value="student.id_pelajar" :id="'student_' + student.id_pelajar" />
                                         </td>
                                         <td>{{ student.nama }}</td>
-                                        <td class="text-center">{{ student.kelas.nama_kelas }}</td>
+                                        <td class="text-center">{{ student.classrooms.nama_kelas }}</td>
                                         <td class="text-center">{{ student.jenis_kelamin }}</td>
                                     </tr>
+
                                     </tbody>
                                 </table>
                                 <div v-if="errors.id_pelajar" class="alert alert-danger mt-2">
@@ -116,7 +116,7 @@ export default {
             } else {
                 form.id_pelajar = [];
             }
-        }
+        };
 
         //method "submit"
         const submit = () => {
