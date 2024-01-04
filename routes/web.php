@@ -89,3 +89,18 @@ Route::prefix('admin')->group(function() {
         Route::get('/reports/export', [\App\Http\Controllers\Admin\LaporanController::class, 'export'])->name('admin.reports.export');
     });
 });
+
+//route homepage
+Route::get('/', function () {
+
+    //cek session student
+    if(auth()->guard('pelajar')->check()) {
+        return redirect()->route('pelajar.dashboard');
+    }
+
+    //return view login
+    return \Inertia\Inertia::render('Pelajar/Login/Index');
+});
+
+//login students
+Route::post('/pelajar/login', \App\Http\Controllers\Pelajar\LoginController::class)->name('student.login');
