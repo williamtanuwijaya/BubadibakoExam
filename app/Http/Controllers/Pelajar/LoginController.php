@@ -22,14 +22,14 @@ class LoginController extends Controller
             'password'  => 'required',
         ]);
 
-        //cek nisn dan password
+        //cek nisn dan kata_sandi
         $pelajar = pelajar::where([
             'nisn'      => $request->nisn,
-            'password'  => $request->password
+            'kata_sandi'  => $request->password
         ])->first();
 
         if(!$pelajar) {
-            return redirect()->back()->with('error', 'NISN atau Password salah');
+            return redirect()->back()->with('error', 'NISN atau kata_sandi salah');
         }
         
         //login the user
