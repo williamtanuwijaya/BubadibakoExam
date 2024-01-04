@@ -1,0 +1,129 @@
+dashboard/index.vue
+
+
+
+<template>
+    <Head>
+        <title>Dashboard Siswa - Aplikasi Ujian Online</title>
+    </Head>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-success border-0 shadow">
+                Selamat Datang <strong>{{ auth.pelajar.nama }}</strong>
+            </div>
+        </div>
+    </div>
+    <div class="row" v-if="kelompok_ujians.length > 0">
+        <div class="col-md-6" v-for="(data, index) in kelompok_ujians" :key="index">
+            <div class="card border-0 shadow">
+                <div class="card-body">
+                    <h5>{{ data.kelompok_ujian.ujian.nama_ujian }}</h5>
+                    <hr>
+                    <div class="table-responsive">
+                        <table class="table table-centered table-nowrap mb-0 rounded">
+                            <thead>
+                                <tr>
+                                    <td class="fw-bold">Mata Pelajaran</td>
+                                    <td>{{ data.kelompok_ujian.exam.lesson.title }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Kelas</td>
+                                    <td>{{ data.kelompok_ujian.pelajar.kelas.title }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Sesi</td>
+                                    <td>{{ data.kelompok_ujian.sesi_ujian.title }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Mulai</td>
+                                    <td>{{ data.kelompok_ujian.sesi_ujian.start_time }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Selesai</td>
+                                    <td>{{ data.kelompok_ujian.sesi_ujian.end_time }}</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    
+                    <!-- cek waktu selesai -->
+                    <div v-if="data.nilai.end_time == null">
+
+                        <!-- cek apakah ujian sudah dimulai, tapi waktu masih ada -->
+                        <div v-if="examTimeRangeChecker(data.kelompok_ujian.sesi_ujian.start_time, data.kelompok_ujian.sesi_ujian.end_time)">
+
+                            <div v-if="data.nilai.start_time == null">
+                                <Link :href="`/pelajar/exam-confirmation/${data.kelompok_ujian.id}`" class="btn btn-md btn-success border-0 shadow w-100 mt-2 text-white">Kerjakan</Link>
+                            </div>
+
+                            <div v-else>
+                                <Link :href="`/pelajar/exam/${data.kelompok_ujian.id}/1`" class="btn btn-md btn-info border-0 shadow w-100 mt-2">Lanjut Kerjakan</Link>
+                            </div>
+
+                        </div>
+
+                        <div v-else>
+
+                            <!-- ujian belum mulai-->
+                            <div v-if="examTimeStartChecker(data.kelompok_ujian.sesi_ujian.start_time)">
+                                <button class="btn btn-md btn-gray-700 border-0 shadow w-100 mt-2" disabled>Belum Mulai</button>
+                            </div>
+
+                            <!-- ujian terlewat -->
+                            <div v-if="examTimeEndChecker(data.kelompok_ujian.sesi_ujian.end_time)">
+                                <button class="btn btn-md btn-danger border-0 shadow w-100 mt-2" disabled>Waktu Terlewat</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div v-else>
+                        <button class="btn btn-md btn-danger border-0 shadow w-100 mt-2" disabled>Sudah Dikerjakan</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" v-else>
+        <div class="col-md-12">
+            <div class="alert alert-danger border-0 shadow">
+                <i class="fa fa-info-circle"></i> Tidak ada ujian yang tersedia
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    //import layout pelajar
+    import LayoutPelajar from '../../../Layouts/Pelajar.vue';
+
+    //import Link from Inertia
+    import {
+        Link
+    } from '@inertiajs/inertia-vue3';
+
+    export default {
+
+        //layout
+        layout: LayoutPelajar,
+
+        //register components
+        components: {
+            Link,
+        },
+
+        //register props
+        props: {
+            kelompok_ujians: Array,
+            auth: Object
+        }
+
+    }
+
+</script>
+
+<style>
+
+</style>

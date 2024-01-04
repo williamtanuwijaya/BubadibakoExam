@@ -104,3 +104,17 @@ Route::get('/', function () {
 
 //login students
 Route::post('/pelajar/login', \App\Http\Controllers\Pelajar\LoginController::class)->name('student.login');
+
+
+//prefix "student"
+Route::prefix('pelajar')->group(function() {
+
+    //middleware "student"
+    Route::group(['middleware' => 'pelajar'], function () {
+        
+        //route dashboard
+        Route::get('/dashboard', App\Http\Controllers\Pelajar\DashboardController::class)->name('pelajar.dashboard');
+    
+    });
+
+});
