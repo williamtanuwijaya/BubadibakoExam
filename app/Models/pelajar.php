@@ -29,7 +29,7 @@ class pelajar extends Authenticatable
      * @return void
      */
     // Model pelajar.php
-    public function classrooms()
+    public function kelas()
     {
         return $this->belongsTo(kelas::class, 'id_kelas');
     }
