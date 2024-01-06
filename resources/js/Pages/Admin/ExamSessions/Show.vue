@@ -70,7 +70,7 @@
                                 <tr v-for="(data, index) in exam_session.kelompok_ujians.data" :key="index">
                                     <td class="fw-bold text-center">{{ ++index + (exam_session.kelompok_ujians.current_page - 1) * exam_session.kelompok_ujians.per_page }}</td>
                                     <td>{{ data.pelajar.nama }}</td>
-                                    <td class="text-center">{{ data.pelajar.classrooms.nama_kelas }}</td>
+                                    <td class="text-center">{{ data.pelajar.kelas.nama_kelas }}</td>
                                     <td class="text-center">{{ data.pelajar.jenis_kelamin }}</td>
                                     <td class="text-center">
                                         <button @click.prevent="destroy(exam_session.id_sesi_ujian, data.id_kelompok_ujian)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>

@@ -86,7 +86,7 @@ class SesiUjianController extends Controller
         $exam_session = sesi_ujian::with('ujian.kelas', 'ujian.mata_pelajaran')->findOrFail($id_sesi_ujian);
 
         //get relation exam_groups with pagination
-        $exam_session->setRelation('kelompok_ujians', $exam_session->kelompok_ujian()->with('pelajar.classrooms')->paginate(5));
+        $exam_session->setRelation('kelompok_ujians', $exam_session->kelompok_ujian()->with('pelajar.kelas')->paginate(5));
 //        dd($exam_session->kelompok_ujians);
         //render with inertia
         return inertia('Admin/ExamSessions/Show', [

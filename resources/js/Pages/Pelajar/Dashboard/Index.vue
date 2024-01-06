@@ -1,7 +1,3 @@
-dashboard/index.vue
-
-
-
 <template>
     <Head>
         <title>Dashboard Siswa - Aplikasi Ujian Online</title>
@@ -53,11 +49,11 @@ dashboard/index.vue
                         <div v-if="examTimeRangeChecker(data.kelompok_ujian.sesi_ujian.start_time, data.kelompok_ujian.sesi_ujian.end_time)">
 
                             <div v-if="data.nilai.start_time == null">
-                                <Link :href="`/pelajar/exam-confirmation/${data.kelompok_ujian.id}`" class="btn btn-md btn-success border-0 shadow w-100 mt-2 text-white">Kerjakan</Link>
+                                <Link :href="`/pelajar/exam-confirmation/${data.kelompok_ujian.id_kelompok_ujian}`" class="btn btn-md btn-success border-0 shadow w-100 mt-2 text-white">Kerjakan</Link>
                             </div>
 
                             <div v-else>
-                                <Link :href="`/pelajar/exam/${data.kelompok_ujian.id}/1`" class="btn btn-md btn-info border-0 shadow w-100 mt-2">Lanjut Kerjakan</Link>
+                                <Link :href="`/pelajar/exam/${data.kelompok_ujian.id_kelompok_ujian}/1`" class="btn btn-md btn-info border-0 shadow w-100 mt-2">Lanjut Kerjakan</Link>
                             </div>
 
                         </div>
@@ -118,7 +114,11 @@ dashboard/index.vue
         props: {
             kelompok_ujians: Array,
             auth: Object
-        }
+        },
+        mounted() {
+        console.log('kelompok_ujians:', this.kelompok_ujians);
+        console.log('auth:', this.auth);
+    },
 
     }
 

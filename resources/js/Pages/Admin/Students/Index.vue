@@ -58,7 +58,7 @@
                                         {{ ++index + (students.current_page - 1) * students.per_page }}</td>
                                     <td>{{ student.nisn }}</td>
                                     <td>{{ student.nama }}</td>
-                                    <td class="text-center">{{ student.classrooms.nama_kelas }}</td>
+                                    <td class="text-center">{{ student.kelas.nama_kelas }}</td>
                                     <td class="text-center">{{ student.jenis_kelamin }}</td>
                                     <td>{{ student.kata_sandi }}</td>
                                     <td class="text-center">

@@ -35,7 +35,7 @@ class DashboardController extends Controller
          //get data nilai / nilai
          $nilai = nilai::where('id_ujian', $kelompok_ujian->id_ujian)
              ->where('id_sesi_ujian', $kelompok_ujian->id_sesi_ujian)
-             ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+             ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
              ->first();
 
          //jika nilai / nilai kosong, maka buat baru
@@ -45,8 +45,8 @@ class DashboardController extends Controller
              $nilai = new nilai();
              $nilai->id_ujian         = $kelompok_ujian->id_ujian;
              $nilai->id_sesi_ujian = $kelompok_ujian->id_sesi_ujian;
-             $nilai->id_pelajar      = auth()->guard('pelajar')->user()->id;
-             $nilai->duration        = $kelompok_ujian->exam->duration * 60000;
+             $nilai->id_pelajar      = auth()->guard('pelajar')->user()->id_pelajar;
+             $nilai->duration        = $kelompok_ujian->exam->durasi * 60000;
              $nilai->total_correct   = 0;
              $nilai->nilai           = 0;
              $nilai->save();

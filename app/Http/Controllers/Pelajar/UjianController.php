@@ -16,14 +16,14 @@ class UjianController extends Controller
     {
         //get kelompok ujian
         $kelompok_ujian = kelompok_ujian::with('ujian.mata_pelajaran', 'sesi_ujian', 'pelajar.kelas')
-                    ->where('id_pelajar', auth()->guard('student')->user()->id)
+                    ->where('id_pelajar', auth()->guard('student')->user()->id_pelajar)
                     ->where('id', $id)
                     ->first();
 
         //get nilai / nilai
         $nilai = nilai::where('id_ujian', $kelompok_ujian->ujian->id_ujian)
                     ->where('id_sesi_ujian', $kelompok_ujian->sesi_ujian->id_sesi_ujian)
-                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                     ->first();
         
         //return with inertia
@@ -62,12 +62,12 @@ class UjianController extends Controller
         if($kelompok_ujian->ujian->random_pertanyaan == 'Y') {
 
             //get pertanyaans / soal ujian
-            $pertanyaans = pertanyaan::where('id_ujian', $kelompok_ujian->ujian->id)->inRandomOrder()->get();
+            $pertanyaans = pertanyaan::where('id_ujian', $kelompok_ujian->ujian->id_ujian)->inRandomOrder()->get();
 
         } else {
 
             //get pertanyaans / soal ujian
-            $pertanyaans = pertanyaan::where('id_ujian', $kelompok_ujian->ujian->id)->get();
+            $pertanyaans = pertanyaan::where('id_ujian', $kelompok_ujian->ujian->id_ujian)->get();
 
         }
 
@@ -303,12 +303,12 @@ class UjianController extends Controller
      * @param  mixed $id
      * @return void
      */
-    public function resultExam($kelompok_ujian_id)
+    public function resultExam($id_kelompok_ujian)
     {
         //get ujian group
         $kelompok_ujian = kelompok_ujian::with('ujian.lesson', 'sesi_ujian', 'pelajar.classroom')
                 ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
-                ->where('id', $kelompok_ujian_id)
+                ->where('id', $id_kelompok_ujian)
                 ->first();
 
         //get nilai / nilai

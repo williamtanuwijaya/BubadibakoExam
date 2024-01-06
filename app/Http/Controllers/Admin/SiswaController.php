@@ -21,7 +21,7 @@ class SiswaController extends Controller
         //get students
         $students = pelajar::when(request()->q, function($students) {
             $students = $students->where('nama', 'like', '%'. request()->q . '%');
-        })->with('classrooms')->latest()->paginate(5);
+        })->with('kelas')->latest()->paginate(5);
 
         //append query string to pagination links
         $students->appends(['q' => request()->q]);
