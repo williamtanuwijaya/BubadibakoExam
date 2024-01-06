@@ -23,7 +23,12 @@ class pertanyaan extends Model
     ];
 
     public function ujian()
-{
-    return $this->belongsTo(ujian::class, 'id_pertanyaan', 'id_ujian');
-}
+    {
+        return $this->belongsTo(ujian::class, 'id_pertanyaan', 'id_ujian');
+    }
+
+    public function pertanyaan()
+    {
+        return $this->belongsTo(pertanyaan::class, 'id_pertanyaan', 'id_pertanyaan');
+    }
 }

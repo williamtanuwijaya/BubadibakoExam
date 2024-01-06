@@ -24,11 +24,11 @@
                             </tr>
                             <tr>
                                 <td class="fw-bold">Kelas</td>
-                                <td>{{ data.kelompok_ujian.pelajar.kelas.title }}</td>
+                                <td>{{ data.kelompok_ujian.pelajar.kelas.nama_kelas }}</td>
                             </tr>
                             <tr>
                                 <td class="fw-bold">Sesi</td>
-                                <td>{{ data.kelompok_ujian.sesi_ujian.title }}</td>
+                                <td>{{ data.kelompok_ujian.sesi_ujian.sesi_ujian }}</td>
                             </tr>
                             <tr>
                                 <td class="fw-bold">Mulai</td>
@@ -56,7 +56,7 @@
                             </div>
 
                             <div v-else>
-                                <Link :href="`/pelajar/exam/${data.kelompok_ujian.id_kelompok_ujian}/1`"
+                                <Link :href="`/pelajar/mulai-ujian/${data.kelompok_ujian.id_kelompok_ujian}/1`"
                                       class="btn btn-md btn-info border-0 shadow w-100 mt-2">Lanjut Kerjakan
                                 </Link>
                             </div>

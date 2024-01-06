@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class jawaban extends Model
 {
     use HasFactory;
+    protected $primaryKey = "id_jawaban";
 
       /**
      * fillable
@@ -21,7 +22,7 @@ class jawaban extends Model
         'id_pelajar',
         'urutan_pertanyaan',
         'urutan_jawaban',
-        'jawaban',
+        'jawwaban',
         'jika_benar',
     ];
 
@@ -32,6 +33,11 @@ class jawaban extends Model
      */
     public function jawaban()
     {
-        return $this->belongsTo(jawaban::class);
+        return $this->belongsTo(jawaban::class, 'id_jawaban','id_jawaban');
+    }
+
+    public function pertanyaan()
+    {
+        return $this->belongsTo(pertanyaan::class, 'id_pertanyaan','id_pertanyaan');
     }
 }

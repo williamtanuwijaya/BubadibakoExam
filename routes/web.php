@@ -128,7 +128,7 @@ Route::prefix('pelajar')->group(function() {
         Route::put('/durasi-ujian/update/{id_nilai}', [App\Http\Controllers\Pelajar\UjianController::class, 'updateDuration'])->name('student.exams.update_duration');
 
         //route answer question
-        Route::post('/jawaban-ujian', [App\Http\Controllers\Pelajar\UjianController::class, 'answerQuestion'])->name('student.exams.answerQuestion');
+        Route::post('/jawaban-ujian', [App\Http\Controllers\Pelajar\UjianController::class, 'jawabanQuestion'])->name('student.exams.answerQuestion');
 
          //route exam end
          Route::post('/akhiri-ujian', [App\Http\Controllers\Pelajar\UjianController::class, 'endExam'])->name('student.exams.endExam');

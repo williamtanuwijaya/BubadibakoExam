@@ -17,14 +17,18 @@ class UjianController extends Controller
         //get kelompok ujian
         $kelompok_ujian = kelompok_ujian::with('ujian.mata_pelajaran', 'sesi_ujian', 'pelajar.kelas')
                     ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
-                    ->where('id_ujian', $id)
+                    ->where('id_kelompok_ujian', $id)
                     ->first();
 
+
         //get nilai / nilai
+
         $nilai = nilai::where('id_ujian', $kelompok_ujian->ujian->id_ujian)
                     ->where('id_sesi_ujian', $kelompok_ujian->sesi_ujian->id_sesi_ujian)
                     ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                     ->first();
+
+
 
         //return with inertia
         return inertia('Pelajar/Ujian/Konfirmasi', [
@@ -45,37 +49,38 @@ class UjianController extends Controller
         //get ujian group
         $kelompok_ujian = kelompok_ujian::with('ujian.mata_pelajaran', 'sesi_ujian', 'pelajar.kelas')
                     ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
-                    ->where('id_ujian', $id)
+                    ->where('id_kelompok_ujian', $id)
                     ->first();
 
         //get grade / nilai
-        $grade = nilai::where('id_ujian', $kelompok_ujian->ujian->id)
-                    ->where('id_sesi_ujian', $kelompok_ujian->sesi_ujian->id)
-                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id_nilai)
+        $nilai = nilai::where('id_ujian', $kelompok_ujian->ujian->id_ujian)
+                    ->where('id_sesi_ujian', $kelompok_ujian->sesi_ujian->id_sesi_ujian)
+                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                     ->first();
 
         //update start time di table grades
 //        $carbon = new Carbon();
-        $grade->waktu_mulai = Carbon::now();
-        $grade->update();
+//        dd($nilai);
+        $nilai->waktu_mulai = Carbon::now();
+        $nilai->update();
 
-        //cek apakah pertanyaans / soal ujian di random
+        //cek apakah pertanyaan / soal ujian di random
         if($kelompok_ujian->ujian->random_pertanyaan == 'Y') {
 
-            //get pertanyaans / soal ujian
-            $pertanyaans = pertanyaan::where('id_ujian', $kelompok_ujian->ujian->id_ujian)->inRandomOrder()->get();
+            //get pertanyaan / soal ujian
+            $pertanyaan = pertanyaan::where('id_ujian', $kelompok_ujian->ujian->id_ujian)->inRandomOrder()->get();
 
         } else {
 
-            //get pertanyaans / soal ujian
-            $pertanyaans = pertanyaan::where('id_ujian', $kelompok_ujian->ujian->id_ujian)->get();
+            //get pertanyaan / soal ujian
+            $pertanyaan = pertanyaan::where('id_ujian', $kelompok_ujian->ujian->id_ujian)->get();
 
         }
 
         //define pilihan jawaban default
         $urutan_pertanyaan = 1;
 
-        foreach ($pertanyaans as $pertanyaan) {
+        foreach ($pertanyaan as $pertanyaan) {
 
             //buat array jawaban / answer
             $pilihans = [1,2];
@@ -109,7 +114,7 @@ class UjianController extends Controller
                     'id_ujian'           => $kelompok_ujian->ujian->id_ujian,
                     'id_sesi_ujian'   => $kelompok_ujian->sesi_ujian->id_sesi_ujian,
                     'id_pertanyaan'       => $pertanyaan->id_pertanyaan,
-                    'id_pelajar'        => auth()->guard('pelajar')->user()->id,
+                    'id_pelajar'        => auth()->guard('pelajar')->user()->id_pelajar,
                     'urutan_pertanyaan'    => $urutan_pertanyaan,
                     'urutan_jawaban'      => implode(",", $pilihans),
                     'jawwaban'            => 0,
@@ -122,7 +127,7 @@ class UjianController extends Controller
         }
 
         //redirect ke ujian halaman 1
-        return redirect()->route('pelajar.ujians.show', [
+        return redirect()->route('student.exams.show', [
             'id'    => $kelompok_ujian->id_kelompok_ujian,
             'page'  => 1
         ]);
@@ -138,37 +143,37 @@ class UjianController extends Controller
     public function show($id, $page)
     {
         //get ujian group
-        $kelompok_ujian = kelompok_ujian::with('ujian.lesson', 'sesi_ujian', 'pelajar.classroom')
-                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
-                    ->where('id', $id)
+        $kelompok_ujian = kelompok_ujian::with('ujian.mata_pelajaran', 'sesi_ujian', 'pelajar.kelas')
+                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
+                    ->where('id_kelompok_ujian', $id)
                     ->first();
 
         if(!$kelompok_ujian) {
             return redirect()->route('pelajar.dashboard');
         }
 
-        //get all pertanyaans
+        //get all pertanyaan
         $all_pertanyaans = jawaban::with('pertanyaan')
-                        ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+                        ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                         ->where('id_ujian', $kelompok_ujian->ujian->id_ujian)
                         ->orderBy('urutan_pertanyaan', 'ASC')
                         ->get();
 
         //count all pertanyaan answered
         $pertanyaan_answered = jawaban::with('pertanyaan')
-                        ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+                        ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                         ->where('id_ujian', $kelompok_ujian->ujian->id_ujian)
-                        ->where('answer', '!=', 0)
+                        ->where('jawwaban', '!=', 0)
                         ->count();
 
 
         //get pertanyaan active
         $pertanyaan_active = jawaban::with('pertanyaan.ujian')
-                        ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+                        ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                         ->where('id_ujian', $kelompok_ujian->ujian->id_ujian)
                         ->where('urutan_pertanyaan', $page)
                         ->first();
-
+//        dd($pertanyaan_active);
         //explode atau pecah jawaban
         if ($pertanyaan_active) {
             $urutan_pertanyaan = explode(",", $pertanyaan_active->urutan_pertanyaan);
@@ -179,11 +184,12 @@ class UjianController extends Controller
         //get durasi
         $durasi = nilai::where('id_ujian', $kelompok_ujian->ujian->id_ujian)
                     ->where('id_sesi_ujian', $kelompok_ujian->sesi_ujian->id_sesi_ujian)
-                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                     ->first();
 
+
         //return with inertia
-        return inertia('Student/Exams/Show', [
+        return inertia('Pelajar/Ujian/Show', [
             'id'                => (int) $id,
             'page'              => (int) $page,
             'kelompok_ujian'        => $kelompok_ujian,
@@ -199,7 +205,7 @@ class UjianController extends Controller
      * updateDuration
      *
      * @param  mixed $request
-     * @param  mixed $grade_id
+     * @param  mixed $id_nilai
      * @return void
      */
     public function updateDuration(Request $request, $id_nilai)
@@ -225,10 +231,10 @@ class UjianController extends Controller
         //update duration
         $nilai = nilai::where('id_ujian', $request->id_ujian)
                 ->where('id_sesi_ujian', $request->id_sesi_ujian)
-                ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+                ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                 ->first();
 
-        $nilai->duration = $request->duration;
+        $nilai->durasi = $request->durasi;
         $nilai->update();
 
         //get question
@@ -248,14 +254,14 @@ class UjianController extends Controller
         //get jawaban
         $jawaban   = jawaban::where('id_ujian', $request->id_ujian)
                     ->where('id_sesi_ujian', $request->id_sesi_ujian)
-                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                     ->where('id_pertanyaan', $request->id_pertanyaan)
                     ->first();
 
         //update jawaban
         if($jawaban) {
             $jawaban->jawaban     = $request->jawaban;
-            $jawaban->is_correct = $result;
+            $jawaban->jika_benar = $result;
             $jawaban->update();
         }
 
@@ -273,8 +279,8 @@ class UjianController extends Controller
         //count jawaban benar
         $count_correct_jawaban = jawaban::where('id_ujian', $request->id_ujian)
                             ->where('id_sesi_ujian', $request->id_sesi_ujian)
-                            ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
-                            ->where('is_correct', 'Y')
+                            ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
+                            ->where('jika_benar', 'Y')
                             ->count();
 
         //count jumlah soal
@@ -286,16 +292,16 @@ class UjianController extends Controller
         //update nilai di table nilais
         $nilai = nilai::where('id_ujian', $request->id_ujian)
                 ->where('id_sesi_ujian', $request->id_sesi_ujian)
-                ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+                ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                 ->first();
 
-        $nilai->end_time        = Carbon::now();
-        $nilai->total_correct   = $count_correct_jawaban;
+        $nilai->waktu_selesai        = Carbon::now();
+        $nilai->total_benar   = $count_correct_jawaban;
         $nilai->nilai           = $nilai_ujian;
         $nilai->update();
 
         //redirect hasil
-        return redirect()->route('pelajar.ujians.resultExam', $request->kelompok_ujian_id);
+        return redirect()->route('student.exams.endExam', $request->id_kelompok_ujian);
     }
 
     /**
@@ -308,14 +314,14 @@ class UjianController extends Controller
     {
         //get ujian group
         $kelompok_ujian = kelompok_ujian::with('ujian.lesson', 'sesi_ujian', 'pelajar.classroom')
-                ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
-                ->where('id', $id_kelompok_ujian)
+                ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
+                ->where('id_kelompok_ujian', $id_kelompok_ujian)
                 ->first();
 
         //get nilai / nilai
         $nilai = nilai::where('id_ujian', $kelompok_ujian->ujian->id)
                 ->where('id_sesi_ujian', $kelompok_ujian->sesi_ujian->id)
-                ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+                ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                 ->first();
 
         //return with inertia

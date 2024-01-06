@@ -20,24 +20,24 @@
                 </div>
                 <div class="card-body">
 
-                    <div v-if="pertanyaan_aktif !== null">
+                    <div v-if="pertanyaan_active !== null">
 
                         <div>
-                            <p v-html="pertanyaan_aktif.pertanyaan.pertanyaan"></p>
+                            <p v-if="pertanyaan_active.pertanyaan && pertanyaan_active.pertanyaan.pertanyaan" v-html="pertanyaan_active.pertanyaan.pertanyaan"></p>
                         </div>
 
                         <table>
                             <tbody>
-                                <tr v-for="(jawaban, index) in urutan_jawaban" :key="index">
+                                <tr v-for="(jawaban, index) in urutan_pertanyaan" :key="index">
                                     <td width="50" style="padding: 10px;">
 
-                                        <button v-if="jawaban == pertanyaan_aktif.jawaban" class="btn btn-info btn-sm w-100 shdaow">{{ pilihan[index] }}</button>
+                                        <button v-if="jawaban == pertanyaan_active.pertanyaan.jawaban" class="btn btn-info btn-sm w-100 shadow">{{ pilihan[index] }}</button>
 
-                                        <button v-else @click.prevent="submitAnswer(pertanyaan_aktif.pertanyaan.ujian.id, pertanyaan_aktif.pertanyaan.id, jawaban)" class="btn btn-outline-info btn-sm w-100 shdaow">{{ pilihan[index] }}</button>
+                                        <button v-else @click.prevent="submitAnswer(pertanyaan_active.pertanyaan.jawaban, pertanyaan_active.pertanyaan.jawaban, jawaban)" class="btn btn-outline-info btn-sm w-100 shdaow">{{ pilihan[index] }}</button>
 
                                     </td>
                                     <td style="padding: 10px;">
-                                        <p v-html="pertanyaan_aktif.pertanyaan['pilihan_'+jawaban]"></p>
+                                        <p v-html="pertanyaan_active.pertanyaan['pilihan_'+jawaban]"></p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -55,10 +55,11 @@
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
                         <div class="text-start">
-                            <button v-if="page > 1" @click.prevent="prevPage" type="button" class="btn btn-gray-400 btn-sm btn-block mb-2">Sebelumnya</button>
+                            <button v-if="page < (all_pertanyaans && Object.keys(all_pertanyaans).length)" @click.prevent="nextPage" type="button" class="btn btn-gray-400 btn-sm">Selanjutnya</button>
+
                         </div>
                         <div class="text-end">
-                            <button v-if="page < Object.keys(all_pertanyaan).length" @click.prevent="nextPage" type="button" class="btn btn-gray-400 btn-sm">Selanjutnya</button>
+                            <button v-if="page < Object.keys(all_pertanyaans).length" @click.prevent="nextPage" type="button" class="btn btn-gray-400 btn-sm">Selanjutnya</button>
                         </div>
                     </div>
                 </div>
@@ -67,11 +68,11 @@
         <div class="col-md-5">
             <div class="card border-0 shadow">
                 <div class="card-header text-center">
-                    <div class="badge bg-success p-2"> {{ pertanyaan_dijawab }} dikerjakan</div>
+                    <div class="badge bg-success p-2"> {{ pertanyaan_answered }} dikerjakan</div>
                 </div>
                 <div class="card-body" style="height: 330px;overflow-y: auto">
 
-                    <div v-for="(pertanyaan, index) in all_pertanyaan" :key="index">
+                    <div v-for="(pertanyaan, index) in all_pertanyaans" :key="index">
                         <div width="20%" style="width: 20%; float: left;">
                             <div style="padding: 5px;">
 
@@ -160,7 +161,7 @@
 
     export default {
         //layout
-        layout: LayoutStudent,
+        layout: LayoutPelajar,
 
         //register components
         components: {
@@ -174,16 +175,20 @@
             id: Number,
             page: Number,
             kelompok_ujian: Object,
-            all_pertanyaan: Array,
-            pertanyaan_dijawab: Number,
-            pertanyaan_aktif: Object,
-            urutan_jawaban: Array,
+            all_pertanyaans: Array,
+            pertanyaan_answered: Number,
+            pertanyaan_active: Object,
+            urutan_pertanyaan: Array,
             durasi: Object,
         },
 
         //composition API
         setup(props) {
-
+            // console.log(props.all_pertanyaans[0].urutan_jawaban);
+            // console.log(props.kelompok_ujian.ujian.id_ujian);
+            // console.log(props.urutan_pertanyaan);
+            // console.log(props.pertanyaan_active.pertanyaan);
+            // console.log(props.all_pertanyaans[0].pertanyaan.pilihan_1);
             //define pilihan for jawaban
             let pilihan = ["A", "B", "C", "D", "E"];
 
@@ -209,7 +214,7 @@
                     if (counter.value % 10 == 1) {
 
                         //update durasi
-                        axios.put(`/student/durasi-ujian/update/${props.durasi.id}`, {
+                        axios.put(`/pelajar/durasi-ujian/update/${props.durasi.id_ujian}`, {
                             durasi: durasi.value
                         })
 
@@ -223,12 +228,12 @@
             const prevPage = (() => {
 
                 //update durasi
-                axios.put(`/student/durasi-ujian/update/${props.durasi.id}`, {
+                axios.put(`/pelajar/durasi-ujian/update/${props.durasi.id_ujian}`, {
                     durasi: durasi.value
                 });
 
                 //redirect to prevPage
-                Inertia.get(`/student/ujian/${props.id}/${props.page - 1}`);
+                Inertia.get(`/pelajar/ujian/${props.id}/${props.page - 1}`);
 
             });
 
@@ -236,32 +241,32 @@
             const nextPage = (() => {
 
                 //update durasi
-                axios.put(`/student/durasi-ujian/update/${props.durasi.id}`, {
+                axios.put(`/pelajar/durasi-ujian/update/${props.durasi.id_ujian}`, {
                     durasi: durasi.value
                 });
 
                 //redirect to nextPage
-                Inertia.get(`/student/ujian/${props.id}/${props.page + 1}`);
+                Inertia.get(`/pelajar/ujian/${props.id}/${props.page + 1}`);
             });
 
             //method clickQuestion
             const clickQuestion = ((index) => {
 
                 //update durasi
-                axios.put(`/student/durasi-ujian/update/${props.durasi.id}`, {
+                axios.put(`/pelajar/durasi-ujian/update/${props.durasi.id_ujian}`, {
                     durasi: durasi.value
                 });
 
                 //redirect to questin
-                Inertia.get(`/student/ujian/${props.id}/${index + 1}`);
+                Inertia.get(`/pelajar/ujian/${props.id}/${index + 1}`);
             });
 
             //method submit jawaban
             const submitAnswer = ((id_ujian, id_pertanyaan, jawaban) => {
 
-                Inertia.post('/student/ujian-jawaban', {
+                Inertia.post('/pelajar/ujian-jawaban', {
                     id_ujian: id_ujian,
-                    id_sesi_ujian: props.kelompok_ujian.sesi_ujian.id,
+                    id_sesi_ujian: props.kelompok_ujian.sesi_ujian.id_sesi_ujian,
                     id_pertanyaan: id_pertanyaan,
                     jawaban: jawaban,
                     durasi: durasi.value
@@ -281,6 +286,7 @@
                     id_ujian: props.kelompok_ujian.ujian.id_ujian,
                     id_sesi_ujian: props.kelompok_ujian.sesi_ujian.id_sesi_ujian,
                 });
+
 
                 //show success alert
                 Swal.fire({
