@@ -23,35 +23,40 @@ class DashboardController extends Controller
     {
          //get exam groups
          $kelompok_ujians = kelompok_ujian::with('ujian.mata_pelajaran', 'sesi_ujian', 'pelajar.kelas')
-         ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+         ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
          ->get();
 
      //define variable array
      $data = [];
+//     $nilai = null;
 
      //get nilai
+//        dd($kelompok_ujians);
      foreach($kelompok_ujians as $kelompok_ujian) {
-         
+//         dd('Check 1');
          //get data nilai / nilai
          $nilai = nilai::where('id_ujian', $kelompok_ujian->id_ujian)
              ->where('id_sesi_ujian', $kelompok_ujian->id_sesi_ujian)
              ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
              ->first();
+//         dd('Check 2', $nilai);
+//         dd($kelompok_ujian->id_ujian, $kelompok_ujian->id_sesi_ujian, auth()->guard('pelajar')->user()->id_pelajar);
 
          //jika nilai / nilai kosong, maka buat baru
          if($nilai == null) {
-
+//             dd('Check 3');
              //create defaul nilai
              $nilai = new nilai();
              $nilai->id_ujian         = $kelompok_ujian->id_ujian;
              $nilai->id_sesi_ujian = $kelompok_ujian->id_sesi_ujian;
              $nilai->id_pelajar      = auth()->guard('pelajar')->user()->id_pelajar;
-             $nilai->duration        = $kelompok_ujian->exam->durasi * 60000;
-             $nilai->total_correct   = 0;
+             $nilai->durasi        = $kelompok_ujian->ujian->durasi * 60000;
+             $nilai->total_benar   = 0;
              $nilai->nilai           = 0;
              $nilai->save();
-
+//dd($nilai);
          }
+
 
          $data[] = [
              'kelompok_ujian' => $kelompok_ujian,
@@ -59,7 +64,9 @@ class DashboardController extends Controller
          ];
 
      }
-
+//        dd($nilai);
+//        dd('Check 4', $data);
+//        dd($data);
      //return with inertia
      return inertia('Pelajar/Dashboard/Index', [
          'kelompok_ujians' => $data,

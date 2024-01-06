@@ -30,11 +30,11 @@
                             <tbody>
                                 <tr v-for="(jawaban, index) in urutan_jawaban" :key="index">
                                     <td width="50" style="padding: 10px;">
-                                        
+
                                         <button v-if="jawaban == pertanyaan_aktif.jawaban" class="btn btn-info btn-sm w-100 shdaow">{{ pilihan[index] }}</button>
 
                                         <button v-else @click.prevent="submitAnswer(pertanyaan_aktif.pertanyaan.ujian.id, pertanyaan_aktif.pertanyaan.id, jawaban)" class="btn btn-outline-info btn-sm w-100 shdaow">{{ pilihan[index] }}</button>
-                                            
+
                                     </td>
                                     <td style="padding: 10px;">
                                         <p v-html="pertanyaan_aktif.pertanyaan['pilihan_'+jawaban]"></p>
@@ -154,7 +154,7 @@
     import {
         Inertia
     } from '@inertiajs/inertia';
-    
+
     //import sweet alert2
     import Swal from 'sweetalert2';
 
@@ -276,10 +276,10 @@
             //method endExam
             const endExam = (() => {
 
-                Inertia.post('/student/ujian-end', {
-                    id_kelompok_ujian: props.kelompok_ujian.id,
-                    id_ujian: props.kelompok_ujian.ujian.id,
-                    id_sesi_ujian: props.kelompok_ujian.sesi_ujian.id,
+                Inertia.post('/pelajar/akhiri-ujian', {
+                    id_kelompok_ujian: props.kelompok_ujian.id_kelompok_ujian,
+                    id_ujian: props.kelompok_ujian.ujian.id_ujian,
+                    id_sesi_ujian: props.kelompok_ujian.sesi_ujian.id_sesi_ujian,
                 });
 
                 //show success alert
@@ -289,10 +289,10 @@
                     icon: 'success',
                     showConfirmButton: false,
                     timer: 4000
-                });           
+                });
 
             });
-            
+
             //return
             return {
                 pilihan,

@@ -54,7 +54,7 @@
                         </table>
                     </div>
                     <div v-if="nilai.end_time == null">
-                        <Link :href="`/pelajar/ujian-start/${kelompok_ujian.id}`"
+                        <Link :href="`/pelajar/mulai-ujian/${kelompok_ujian.id_kelompok_ujian}`"
                             class="btn btn-md btn-success border-0 shadow w-100 mt-2 text-white">Mulai</Link>
                     </div>
                     <div v-else>

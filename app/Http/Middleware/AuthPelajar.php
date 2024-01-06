@@ -15,7 +15,7 @@ class AuthPelajar
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {   
+    {
 
         $pelajar = auth()->guard('pelajar')->user();
 

@@ -46,7 +46,7 @@ class HandleInertiaRequests extends Middleware
             //user authenticated
             'auth'  =>[
                 'user'          => auth()->user() ?   auth()->user() : null,
-                'pelajar' => auth()->guard('pelajar')->user()  ?   auth()->guard('pelajar')->user() : null,
+                'pelajars' => auth()->guard('pelajar')->user()  ?   auth()->guard('pelajar')->user() : null,
             ],
         ]);
     }

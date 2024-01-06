@@ -16,8 +16,8 @@ class UjianController extends Controller
     {
         //get kelompok ujian
         $kelompok_ujian = kelompok_ujian::with('ujian.mata_pelajaran', 'sesi_ujian', 'pelajar.kelas')
-                    ->where('id_pelajar', auth()->guard('student')->user()->id_pelajar)
-                    ->where('id', $id)
+                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
+                    ->where('id_ujian', $id)
                     ->first();
 
         //get nilai / nilai
@@ -25,9 +25,9 @@ class UjianController extends Controller
                     ->where('id_sesi_ujian', $kelompok_ujian->sesi_ujian->id_sesi_ujian)
                     ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
                     ->first();
-        
+
         //return with inertia
-        return inertia('Student/Exams/Confirmation', [
+        return inertia('Pelajar/Ujian/Konfirmasi', [
             'kelompok_ujian' => $kelompok_ujian,
             'nilai' => $nilai,
         ]);
@@ -44,18 +44,19 @@ class UjianController extends Controller
     {
         //get ujian group
         $kelompok_ujian = kelompok_ujian::with('ujian.mata_pelajaran', 'sesi_ujian', 'pelajar.kelas')
-                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
-                    ->where('id', $id)
+                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
+                    ->where('id_ujian', $id)
                     ->first();
 
         //get grade / nilai
         $grade = nilai::where('id_ujian', $kelompok_ujian->ujian->id)
                     ->where('id_sesi_ujian', $kelompok_ujian->sesi_ujian->id)
-                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
+                    ->where('id_pelajar', auth()->guard('pelajar')->user()->id_nilai)
                     ->first();
 
         //update start time di table grades
-        $grade->start_time = Carbon::now();
+//        $carbon = new Carbon();
+        $grade->waktu_mulai = Carbon::now();
         $grade->update();
 
         //cek apakah pertanyaans / soal ujian di random
@@ -88,7 +89,7 @@ class UjianController extends Controller
             }
 
             //cek apakah sudah ada data jawaban
-            $answer = jawaban::where('id_pelajar', auth()->guard('pelajar')->user()->id)
+            $answer = jawaban::where('id_pelajar', auth()->guard('pelajar')->user()->id_jawaban)
                     ->where('id_ujian', $kelompok_ujian->ujian->id_ujian)
                     ->where('id_sesi_ujian', $kelompok_ujian->sesi_ujian->id_sesi_ujian)
                     ->where('id_pertanyaan', $pertanyaan->id_pertanyaan)
@@ -122,11 +123,11 @@ class UjianController extends Controller
 
         //redirect ke ujian halaman 1
         return redirect()->route('pelajar.ujians.show', [
-            'id'    => $kelompok_ujian->id, 
+            'id'    => $kelompok_ujian->id_kelompok_ujian,
             'page'  => 1
-        ]);   
+        ]);
     }
-    
+
     /**
      * show
      *
@@ -167,7 +168,7 @@ class UjianController extends Controller
                         ->where('id_ujian', $kelompok_ujian->ujian->id_ujian)
                         ->where('urutan_pertanyaan', $page)
                         ->first();
-        
+
         //explode atau pecah jawaban
         if ($pertanyaan_active) {
             $urutan_pertanyaan = explode(",", $pertanyaan_active->urutan_pertanyaan);
@@ -191,7 +192,7 @@ class UjianController extends Controller
             'pertanyaan_active'   => $pertanyaan_active,
             'urutan_pertanyaan' => $urutan_pertanyaan,
             'durasi'        	=> $durasi,
-        ]); 
+        ]);
     }
 
       /**
@@ -232,7 +233,7 @@ class UjianController extends Controller
 
         //get question
         $question = pertanyaan::find($request->id_pertanyaan);
-        
+
         //cek apakah jawaban sudah benar
         if($question->jawaban == $request->jawaban) {
 
@@ -287,7 +288,7 @@ class UjianController extends Controller
                 ->where('id_sesi_ujian', $request->id_sesi_ujian)
                 ->where('id_pelajar', auth()->guard('pelajar')->user()->id)
                 ->first();
-        
+
         $nilai->end_time        = Carbon::now();
         $nilai->total_correct   = $count_correct_jawaban;
         $nilai->nilai           = $nilai_ujian;

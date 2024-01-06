@@ -7,11 +7,11 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 </ul>
-                <form class="d-flex" v-if="$page.props.auth.pelajar">
-                
+                <form class="d-flex" v-if="$page.props.auth.pelajars">
+
                     <Link href="/logout" method="POST" class="btn btn-secondary shadow" as="button">LOGOUT</Link>
                 </form>
-                
+
             </div>
         </div>
     </nav>
@@ -37,7 +37,6 @@
         // }
     }
 
-    
 
 </script>
 

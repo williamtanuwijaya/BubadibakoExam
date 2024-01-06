@@ -34,7 +34,7 @@
                                             <input type="checkbox" v-model="form.id_pelajar" :value="student.id_pelajar" :id="'student_' + student.id_pelajar" />
                                         </td>
                                         <td>{{ student.nama }}</td>
-                                        <td class="text-center">{{ student.classrooms.nama_kelas }}</td>
+                                        <td class="text-center">{{ student.kelas.nama_kelas }}</td>
                                         <td class="text-center">{{ student.jenis_kelamin }}</td>
                                     </tr>
 
