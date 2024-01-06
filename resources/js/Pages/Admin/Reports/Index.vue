@@ -14,11 +14,11 @@
                             <div class="row">
                                 <div class="col-md-9">
                                     <label class="control-label" for="name">Ujian</label>
-                                    <select class="form-select" v-model="form.id_ujian">
-                                        <option v-for="(exam, index) in exams" :key="index" :value="exam.id">{{ exam.nama_ujian }} — Kelas : {{ exam.kelas.nama_kelas }} — Pelajaran : {{ exam.mata_pelajaran.nama_mapel }}</option>
+                                    <select class="form-select" v-model="form.exam_id">
+                                        <option v-for="(exam, index) in exams" :key="index" :value="exam.id">{{ exam.title }} — Kelas : {{ exam.classroom.title }} — Pelajaran : {{ exam.lesson.title }}</option>
                                     </select>
-                                    <div v-if="errors.id_ujian" class="alert alert-danger mt-2">
-                                        {{ errors.id_ujian }}
+                                    <div v-if="errors.exam_id" class="alert alert-danger mt-2">
+                                        {{ errors.exam_id }}
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -38,7 +38,7 @@
                                 <h5 class="mt-2"><i class="fa fa-chart-line"></i> Laporan Nilai Ujian</h5>
                             </div>
                             <div class="col-md-3 col-12">
-                                <a :href="`/admin/reports/export?exam_id=${form.id_ujian}`" target="_blank" class="btn btn-success btn-md border-0 shadow w-100 text-white"><i class="fa fa-file-excel"></i> DOWNLOAD EXCEL</a>
+                                <a :href="`/admin/reports/export?exam_id=${form.exam_id}`" target="_blank" class="btn btn-success btn-md border-0 shadow w-100 text-white"><i class="fa fa-file-excel"></i> DOWNLOAD EXCEL</a>
                             </div>
                         </div>
                         <hr>
@@ -57,16 +57,16 @@
                                 </thead>
                                 <div class="mt-2"></div>
                                 <tbody>
-                                <tr v-for="(grade, index) in grades" :key="grade.id_nilai">
+                                <tr v-for="(grade, index) in grades" :key="grade.id">
                                     <td class="fw-bold text-center">
                                         {{ index + 1 }}
                                     </td>
-                                    <td>{{ grade.exam.nama_ujian }}</td>
-                                    <td>{{ grade.exam_session.sesi_ujian }}</td>
-                                    <td>{{ grade.student.nama }}</td>
-                                    <td class="text-center">{{ grade.exam.kelas.nama_kelas }}</td>
-                                    <td>{{ grade.exam.mata_pelajaran.nama_mapel }}</td>
-                                    <td class="fw-bold text-center">{{ grade.nilai }}</td>
+                                    <td>{{ grade.exam.title }}</td>
+                                    <td>{{ grade.exam_session.title }}</td>
+                                    <td>{{ grade.student.name }}</td>
+                                    <td class="text-center">{{ grade.exam.classroom.title }}</td>
+                                    <td>{{ grade.exam.lesson.title }}</td>
+                                    <td class="fw-bold text-center">{{ grade.grade }}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -115,7 +115,7 @@ export default {
 
         //define state
         const form = reactive({
-            'id_ujian': '' || (new URL(document.location)).searchParams.get('id_ujian'),
+            'exam_id': '' || (new URL(document.location)).searchParams.get('exam_id'),
         });
 
         //define methods filter
@@ -125,7 +125,7 @@ export default {
             Inertia.get('/admin/reports/filter', {
 
                 //send data to server
-                id_ujian: form.id_ujian,
+                exam_id: form.exam_id,
             });
 
         }

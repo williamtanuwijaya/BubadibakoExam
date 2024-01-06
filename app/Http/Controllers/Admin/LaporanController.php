@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\NilaiExport;
-use App\Models\ujian;
-use App\Models\nilai;
-use App\Models\sesi_ujian;
+use Carbon\Carbon;
+use App\Models\Exam;
+use App\Models\Grade;
+use App\Models\ExamSession;
 use Illuminate\Http\Request;
+use App\Exports\NilaiExport;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -20,43 +21,43 @@ class LaporanController extends Controller
     public function index()
     {
         //geta ll exams
-        $exams = ujian::with('mata_pelajaran', 'kelas')->get();
+        $exams = Exam::with('lesson', 'classroom')->get();
 
         return inertia('Admin/Reports/Index', [
-            'exams' => $exams,
-            'grades' => []
+            'exams'         => $exams,
+            'grades'        => []
         ]);
     }
 
     /**
      * filter
      *
-     * @param mixed $request
+     * @param  mixed $request
      * @return void
      */
     public function filter(Request $request)
     {
         $this->validate($request, [
-            'id_ujian' => 'required',
+            'exam_id'       => 'required',
         ]);
 
         //geta ll exams
-        $exams = ujian::with('mata_pelajaran', 'kelas')->get();
+        $exams = Exam::with('lesson', 'classroom')->get();
 
         //get exam
         $exam = Exam::with('lesson', 'classroom')
             ->where('id', $request->exam_id)
             ->first();
 
-        if ($exam) {
+        if($exam) {
 
             //get exam session
-            $exam_session = sesi_ujian::where('id_ujian', $exam->id_sesi_ujian)->first();
+            $exam_session = ExamSession::where('exam_id', $exam->id)->first();
 
             //get grades / nilai
-            $grades = nilai::with('pelajar', 'ujian.kelas', 'ujian.mata_pelajaran', 'sesi_ujian')
-                ->where('id_ujian', $exam->id_ujian)
-                ->where('id_sesi_ujian', $exam_session->id_sesi_ujian)
+            $grades = Grade::with('student', 'exam.classroom', 'exam.lesson', 'exam_session')
+                ->where('exam_id', $exam->id)
+                ->where('exam_session_id', $exam_session->id)
                 ->get();
 
         } else {
@@ -64,33 +65,34 @@ class LaporanController extends Controller
         }
 
         return inertia('Admin/Reports/Index', [
-            'exams' => $exams,
-            'grades' => $grades,
+            'exams'         => $exams,
+            'grades'         => $grades,
         ]);
+
     }
 
     /**
      * export
      *
-     * @param mixed $request
+     * @param  mixed $request
      * @return void
      */
     public function export(Request $request)
     {
         //get exam
-        $exam = ujian::with('mata_pelajaran', 'kelas')
-            ->where('id_ujian', $request->id_ujian)
+        $exam = Exam::with('lesson', 'classroom')
+            ->where('id', $request->exam_id)
             ->first();
 
         //get exam session
-        $exam_session = sesi_ujian::where('id_ujian', $exam->id_ujian)->first();
+        $exam_session = ExamSession::where('exam_id', $exam->id)->first();
 
         //get grades / nilai
-        $grades = nilai::with('pelajar', 'ujian.kelas', 'ujian.mata_pelajaran', 'sesi_ujian')
-            ->where('id_ujian', $exam->id_ujian)
-            ->where('id_sesi_ujian', $exam_session->id_sesi_ujian)
+        $grades = Grade::with('student', 'exam.classroom', 'exam.lesson', 'exam_session')
+            ->where('exam_id', $exam->id)
+            ->where('exam_session_id', $exam_session->id)
             ->get();
 
-        return Excel::download(new NilaiExport($grades), 'grade : ' . $exam->nama_ujian . ' — ' . $exam->mata_pelajaran->nama_mapel . ' — ' . Carbon::now() . '.xlsx');
+        return Excel::download(new NilaiExport($grades), 'grade : '.$exam->title.' — '.$exam->lesson->title.' — '.Carbon::now().'.xlsx');
     }
 }

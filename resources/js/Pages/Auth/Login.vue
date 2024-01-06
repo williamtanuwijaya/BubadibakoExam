@@ -8,7 +8,7 @@
         </div>
         <form @submit.prevent="submit" class="mt-4">
             <div class="form-group mb-4">
-                <label for="email" id="email">Email Address</label>
+                <label for="email">Email Address</label>
                 <div class="input-group">
                     <span class="input-group-text" id="basic-addon1">
                         <i class="fa fa-envelope"></i>
@@ -22,7 +22,7 @@
 
             <div class="form-group">
                 <div class="form-group mb-4">
-                    <label for="password" id="password">Password</label>
+                    <label for="password">Password</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon2">
                             <i class="fa fa-lock"></i>

@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pelajars', function (Blueprint $table) {
-            $table->id('id_pelajar');
-            $table->foreignId('id_kelas')->references('id_kelas')->on('kelas')->cascadeOnDelete();
-            $table->bigInteger('nisn')->unique();
-            $table->string('nama');
-            $table->string('kata_sandi');
-            $table->enum('jenis_kelamin', ['L', 'P'])->default('L');
+        Schema::create('exam_groups', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('exam_id')->references('id')->on('exams')->cascadeOnDelete();
+            $table->foreignId('exam_session_id')->references('id')->on('exam_sessions')->cascadeOnDelete();
+            $table->foreignId('student_id')->references('id')->on('students')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pelajars');
+        Schema::dropIfExists('exam_groups');
     }
 };

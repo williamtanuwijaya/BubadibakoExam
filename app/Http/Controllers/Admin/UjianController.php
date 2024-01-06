@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Imports\ImportDataPertanyaan;
-use App\Models\pertanyaan;
-use App\Models\ujian;
-use App\Models\mata_pelajaran;
-use App\Models\kelas;
+use App\Models\Exam;
+use App\Models\Lesson;
+use App\Models\Question;
+use App\Models\Classroom;
 use Illuminate\Http\Request;
+use App\Imports\ImportDataPertanyaan;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -21,9 +21,9 @@ class UjianController extends Controller
     public function index()
     {
         //get exams
-        $exams = ujian::when(request()->q, function($exams) {
-            $exams = $exams->where('nama_ujian', 'like', '%'. request()->q . '%');
-        })->with('mata_pelajaran', 'kelas', 'pertanyaan')->latest()->paginate(5);
+        $exams = Exam::when(request()->q, function($exams) {
+            $exams = $exams->where('title', 'like', '%'. request()->q . '%');
+        })->with('lesson', 'classroom', 'questions')->latest()->paginate(5);
 
         //append query string to pagination links
         $exams->appends(['q' => request()->q]);
@@ -42,10 +42,10 @@ class UjianController extends Controller
     public function create()
     {
         //get lessons
-        $lessons = mata_pelajaran::all();
+        $lessons = Lesson::all();
 
         //get classrooms
-        $classrooms = kelas::all();
+        $classrooms = Classroom::all();
 
         //render with inertia
         return inertia('Admin/Exams/Create', [
@@ -64,45 +64,46 @@ class UjianController extends Controller
     {
         //validate request
         $request->validate([
-            'nama_ujian' => 'required',
-            'id_mapel' => 'required|integer',
-            'id_kelas' => 'required|integer',
-            'durasi' => 'required|integer',
-            'deskripsi' => 'required',
-            'pertanyaan_acak' => 'required',
-            'jawaban_acak' => 'required',
-            'hasil' => 'required',
+            'title'             => 'required',
+            'lesson_id'         => 'required|integer',
+            'classroom_id'      => 'required|integer',
+            'duration'          => 'required|integer',
+            'description'       => 'required',
+            'random_question'   => 'required',
+            'random_answer'     => 'required',
+            'show_answer'       => 'required',
         ]);
 
         //create exam
-        ujian::create([
-            'nama_ujian' => $request->nama_ujian,
-            'id_mapel' => $request->id_mapel,
-            'id_kelas' => $request->id_kelas,
-            'durasi' => $request->durasi,
-            'deskripsi' => $request->deskripsi,
-            'pertanyaan_acak' => $request->pertanyaan_acak,
-            'jawaban_acak' => $request->jawaban_acak,
-            'hasil' => $request->hasil,
+        Exam::create([
+            'title'             => $request->title,
+            'lesson_id'         => $request->lesson_id,
+            'classroom_id'      => $request->classroom_id,
+            'duration'          => $request->duration,
+            'description'       => $request->description,
+            'random_question'   => $request->random_question,
+            'random_answer'     => $request->random_answer,
+            'show_answer'       => $request->show_answer,
         ]);
 
         //redirect
         return redirect()->route('admin.exams.index');
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id_ujian
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id_ujian)
+    public function show($id)
     {
         //get exam
-        $exam = ujian::with('mata_pelajaran', 'kelas')->findOrFail($id_ujian);
+        $exam = Exam::with('lesson', 'classroom')->findOrFail($id);
 
-        //get relation pertanyaans with pagination
-        $exam->setRelation('pertanyaan', $exam->pertanyaan()->paginate(5, ['*'], 'page_pertanyaan'));
+        //get relation questions with pagination
+        $exam->setRelation('questions', $exam->questions()->paginate(5));
 
         //render with inertia
         return inertia('Admin/Exams/Show', [
@@ -110,25 +111,22 @@ class UjianController extends Controller
         ]);
     }
 
-
-
-
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id_ujian
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id_ujian)
+    public function edit($id)
     {
         //get exam
-        $exam = ujian::findOrFail($id_ujian);
+        $exam = Exam::findOrFail($id);
 
         //get lessons
-        $lessons = mata_pelajaran::all();
+        $lessons = Lesson::all();
 
         //get classrooms
-        $classrooms = kelas::all();
+        $classrooms = Classroom::all();
 
         //render with inertia
         return inertia('Admin/Exams/Edit', [
@@ -142,33 +140,33 @@ class UjianController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id_ujian
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ujian $exam)
+    public function update(Request $request, Exam $exam)
     {
         //validate request
         $request->validate([
-            'nama_ujian' => 'required',
-            'id_mapel' => 'required|integer',
-            'id_kelas' => 'required|integer',
-            'durasi' => 'required|integer',
-            'deskripsi' => 'required',
-            'pertanyaan_acak' => 'required',
-            'jawaban_acak' => 'required',
-            'hasil' => 'required',
+            'title'             => 'required',
+            'lesson_id'         => 'required|integer',
+            'classroom_id'      => 'required|integer',
+            'duration'          => 'required|integer',
+            'description'       => 'required',
+            'random_question'   => 'required',
+            'random_answer'     => 'required',
+            'show_answer'       => 'required',
         ]);
 
         //update exam
         $exam->update([
-            'nama_ujian' => $request->nama_ujian,
-            'id_mapel' => $request->id_mapel,
-            'id_kelas' => $request->id_kelas,
-            'durasi' => $request->durasi,
-            'deskripsi' => $request->deskripsi,
-            'pertanyaan_acak' => $request->pertanyaan_acak,
-            'jawaban_acak' => $request->jawaban_acak,
-            'hasil' => $request->hasil,
+            'title'             => $request->title,
+            'lesson_id'         => $request->lesson_id,
+            'classroom_id'      => $request->classroom_id,
+            'duration'          => $request->duration,
+            'description'       => $request->description,
+            'random_question'   => $request->random_question,
+            'random_answer'     => $request->random_answer,
+            'show_answer'       => $request->show_answer,
         ]);
 
         //redirect
@@ -178,13 +176,13 @@ class UjianController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id_ujian
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id_ujian)
+    public function destroy($id)
     {
         //get exam
-        $exam = ujian::findOrFail($id_ujian);
+        $exam = Exam::findOrFail($id);
 
         //delete exam
         $exam->delete();
@@ -194,54 +192,55 @@ class UjianController extends Controller
     }
 
     /**
-     * createpertanyaan
+     * createQuestion
      *
      * @param  mixed $exam
      * @return void
      */
-    public function createQuestion(ujian $exam)
+    public function createQuestion(Exam $exam)
     {
         //render with inertia
         return inertia('Admin/Questions/Create', [
             'exam' => $exam,
         ]);
     }
-    
+
     /**
-     * storepertanyaan
+     * storeQuestion
      *
      * @param  mixed $request
      * @param  mixed $exam
      * @return void
      */
-    public function storeQuestion(Request $request, ujian $exam)
-{
-    //validate request
-    $request->validate([
-        'pertanyaan' => 'required',
-        'pilihan_1' => 'required',
-        'pilihan_2' => 'required',
-        'pilihan_3' => 'required',
-        'pilihan_4' => 'required',
-        'pilihan_5' => 'required',
-        'jawaban' => 'required',
-    ]);
+    public function storeQuestion(Request $request, Exam $exam)
+    {
+        //validate request
+        $request->validate([
+            'question'          => 'required',
+            'option_1'          => 'required',
+            'option_2'          => 'required',
+            'option_3'          => 'required',
+            'option_4'          => 'required',
+            'option_5'          => 'required',
+            'answer'            => 'required',
+        ]);
 
-    //create pertanyaan
-    pertanyaan::create([
-        'id_ujian' => $exam->id_ujian,
-        'pertanyaan' => $request->pertanyaan,
-        'pilihan_1' => $request->pilihan_1,
-        'pilihan_2' => $request->pilihan_2,
-        'pilihan_3' => $request->pilihan_3,
-        'pilihan_4' => $request->pilihan_4,
-        'pilihan_5' => $request->pilihan_5,
-        'jawaban' => $request->jawaban,
-    ]);
+        //create question
+        Question::create([
+            'exam_id'           => $exam->id,
+            'question'          => $request->question,
+            'option_1'          => $request->option_1,
+            'option_2'          => $request->option_2,
+            'option_3'          => $request->option_3,
+            'option_4'          => $request->option_4,
+            'option_5'          => $request->option_5,
+            'answer'            => $request->answer,
+        ]);
 
-    //redirect
-    return redirect()->route('admin.exams.show', $exam->id_ujian);
-}
+        //redirect
+        return redirect()->route('admin.exams.show', $exam->id);
+    }
+
     /**
      * editQuestion
      *
@@ -249,7 +248,7 @@ class UjianController extends Controller
      * @param  mixed $question
      * @return void
      */
-    public function editQuestion(ujian $exam, pertanyaan $question)
+    public function editQuestion(Exam $exam, Question $question)
     {
         //render with inertia
         return inertia('Admin/Questions/Edit', [
@@ -266,33 +265,34 @@ class UjianController extends Controller
      * @param  mixed $question
      * @return void
      */
-    public function updateQuestion(Request $request, ujian $exam, pertanyaan $question)
+    public function updateQuestion(Request $request, Exam $exam, Question $question)
     {
         //validate request
         $request->validate([
-            'pertanyaan'          => 'required',
-            'pilihan_1'          => 'required',
-            'pilihan_2'          => 'required',
-            'pilihan_3'          => 'required',
-            'pilihan_4'          => 'required',
-            'pilihan_5'          => 'required',
-            'jawaban'            => 'required',
+            'question'          => 'required',
+            'option_1'          => 'required',
+            'option_2'          => 'required',
+            'option_3'          => 'required',
+            'option_4'          => 'required',
+            'option_5'          => 'required',
+            'answer'            => 'required',
         ]);
-        
+
         //update question
         $question->update([
-            'pertanyaan'          => $request->pertanyaan,
-            'pilihan_1'          => $request->pilihan_1,
-            'pilihan_2'          => $request->pilihan_2,
-            'pilihan_3'          => $request->pilihan_3,
-            'pilihan_4'          => $request->pilihan_4,
-            'pilihan_5'          => $request->pilihan_5,
-            'jawaban'            => $request->jawaban,
+            'question'          => $request->question,
+            'option_1'          => $request->option_1,
+            'option_2'          => $request->option_2,
+            'option_3'          => $request->option_3,
+            'option_4'          => $request->option_4,
+            'option_5'          => $request->option_5,
+            'answer'            => $request->answer,
         ]);
-        
+
         //redirect
-        return redirect()->route('admin.exams.show', $exam->id_ujian);
+        return redirect()->route('admin.exams.show', $exam->id);
     }
+
     /**
      * destroyQuestion
      *
@@ -300,13 +300,13 @@ class UjianController extends Controller
      * @param  mixed $question
      * @return void
      */
-    public function destroyQuestion(ujian $exam, pertanyaan $question)
+    public function destroyQuestion(Exam $exam, Question $question)
     {
         //delete question
         $question->delete();
-        
+
         //redirect
-        return redirect()->route('admin.exams.show', $exam->id_ujian);
+        return redirect()->route('admin.exams.show', $exam->id);
     }
 
     /**
@@ -314,20 +314,20 @@ class UjianController extends Controller
      *
      * @return void
      */
-    public function import(ujian $exam)
+    public function import(Exam $exam)
     {
         return inertia('Admin/Questions/Import', [
             'exam' => $exam
         ]);
     }
-    
+
     /**
      * storeImport
      *
      * @param  mixed $request
      * @return void
      */
-    public function storeImport(Request $request, ujian $exam)
+    public function storeImport(Request $request, Exam $exam)
     {
         $this->validate($request, [
             'file' => 'required|mimes:csv,xls,xlsx'
@@ -337,7 +337,6 @@ class UjianController extends Controller
         Excel::import(new ImportDataPertanyaan(), $request->file('file'));
 
         //redirect
-        return redirect()->route('admin.exams.show', $exam->id_ujian);
+        return redirect()->route('admin.exams.show', $exam->id);
     }
 }
-

@@ -7,9 +7,9 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-3 col-12 mb-2">
-                        <Link href="/admin/mata_pelajaran/create" class="btn btn-md btn-primary border-0 shadow w-100" type="button">
-                            <i class="fa fa-plus-circle"></i> Tambah
-                        </Link>
+                        <Link href="/admin/lessons/create" class="btn btn-md btn-primary border-0 shadow w-100" type="button"><i
+                            class="fa fa-plus-circle"></i>
+                            Tambah</Link>
                     </div>
                     <div class="col-md-9 col-12 mb-2">
                         <form @submit.prevent="handleSearch">
@@ -21,6 +21,7 @@
                             </div>
                         </form>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -40,22 +41,18 @@
                                 </thead>
                                 <div class="mt-2"></div>
                                 <tbody>
-                                <tr v-for="(mata_pelajaran, index) in mata_pelajarans.data" :key="index">
-                                    <td class="fw-bold text-center">{{ ++index + (mata_pelajarans.current_page - 1) * mata_pelajarans.per_page }}</td>
-                                    <td>{{ mata_pelajaran.nama_mapel }}</td>
+                                <tr v-for="(lesson, index) in lessons.data" :key="index">
+                                    <td class="fw-bold text-center">{{ ++index + (lessons.current_page - 1) * lessons.per_page }}</td>
+                                    <td>{{ lesson.title }}</td>
                                     <td class="text-center">
-                                        <Link :href="`/admin/mata_pelajaran/${mata_pelajaran.id_mapel}/edit`" class="btn btn-sm btn-info border-0 shadow me-2" type="button">
-                                        <i class="fa fa-pencil-alt"></i>
-                                        </Link>
-                                        <button @click.prevent="destroy(mata_pelajaran.id_mapel)" class="btn btn-sm btn-danger border-0">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
+                                        <Link :href="`/admin/lessons/${lesson.id}/edit`" class="btn btn-sm btn-info border-0 shadow me-2" type="button"><i class="fa fa-pencil-alt"></i></Link>
+                                        <button @click.prevent="destroy(lesson.id)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <Pagination :links="mata_pelajarans.links" align="end" />
+                        <Pagination :links="lessons.links" align="end" />
                     </div>
                 </div>
             </div>
@@ -64,55 +61,62 @@
 </template>
 
 <script>
-// Import layout
+//import layout
 import LayoutAdmin from '../../../Layouts/Admin.vue';
 
-// Import component pagination
+//import component pagination
 import Pagination from '../../../Components/Pagination.vue';
 
-// Import Head and Link from Inertia
-import { Head, Link } from '@inertiajs/inertia-vue3';
+//import Heade and Link from Inertia
+import {
+    Head,
+    Link
+} from '@inertiajs/inertia-vue3';
 
-// Import ref from vue
-import { ref } from 'vue';
+//import ref from vue
+import {
+    ref
+} from 'vue';
 
-// Import inertia adapter
+//import inertia adapter
 import { Inertia } from '@inertiajs/inertia';
 
-// Import sweet alert2
+//import sweet alert2
 import Swal from 'sweetalert2';
 
 export default {
-    // Layout
+    //layout
     layout: LayoutAdmin,
 
-    // Register component
+    //register component
     components: {
         Head,
         Link,
         Pagination
     },
 
-    // Props
+    //props
     props: {
-        mata_pelajarans: Object,
+        lessons: Object,
     },
 
-    // Initialization of the composition API
+    //inisialisasi composition API
     setup() {
-        // Define state search
+
+        //define state search
         const search = ref('' || (new URL(document.location)).searchParams.get('q'));
 
-        // Define method search
+        //define method search
         const handleSearch = () => {
-            Inertia.get('/admin/mata_pelajaran', {
-                // Send params "q" with value from state "search"
+            Inertia.get('/admin/lessons', {
+
+                //send params "q" with value from state "search"
                 q: search.value,
             });
         }
 
-        // Define method destroy
-        const destroy = (id_mapel) => {
+        //define method destroy
+        const destroy = (id) => {
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: "Anda tidak akan dapat mengembalikan ini!",
@@ -121,28 +125,33 @@ export default {
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Inertia.delete(`/admin/mata_pelajaran/${id_mapel}`);
-                    Swal.fire({
-                        title: 'Deleted!',
-                        text: 'Pelajaran Berhasil Dihapus!.',
-                        icon: 'success',
-                        timer: 2000,
-                        showConfirmButton: false,
-                    });
-                }
-            });
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+
+                        Inertia.delete(`/admin/lessons/${id}`);
+
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Pelajaran Berhasil Dihapus!.',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false,
+                        });
+                    }
+                })
         }
 
-        // Return
+        //return
         return {
             search,
             handleSearch,
             destroy
         }
+
     }
 }
+
 </script>
 
 <style>

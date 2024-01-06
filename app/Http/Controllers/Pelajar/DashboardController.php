@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers\Pelajar;
 
-use App\Models\kelompok_ujian;
-use App\Models\ujian;
-use App\Models\pelajar;
-use App\Models\kelas;
-use App\Models\sesi_ujian;
-use Illuminate\Http\Request;
+use App\Models\Grade;
+use App\Models\ExamGroup;
 use App\Http\Controllers\Controller;
-use App\Models\nilai;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -21,55 +17,47 @@ class DashboardController extends Controller
      */
     public function __invoke(Request $request)
     {
-         //get exam groups
-         $kelompok_ujians = kelompok_ujian::with('ujian.mata_pelajaran', 'sesi_ujian', 'pelajar.kelas')
-         ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
-         ->get();
+        //get exam groups
+        $exam_groups = ExamGroup::with('exam.lesson', 'exam_session', 'student.classroom')
+            ->where('student_id', auth()->guard('student')->user()->id)
+            ->get();
 
-     //define variable array
-     $data = [];
-//     $nilai = null;
+        //define variable array
+        $data = [];
 
-     //get nilai
-//        dd($kelompok_ujians);
-     foreach($kelompok_ujians as $kelompok_ujian) {
-//         dd('Check 1');
-         //get data nilai / nilai
-         $nilai = nilai::where('id_ujian', $kelompok_ujian->id_ujian)
-             ->where('id_sesi_ujian', $kelompok_ujian->id_sesi_ujian)
-             ->where('id_pelajar', auth()->guard('pelajar')->user()->id_pelajar)
-             ->first();
-//         dd('Check 2', $nilai);
-//         dd($kelompok_ujian->id_ujian, $kelompok_ujian->id_sesi_ujian, auth()->guard('pelajar')->user()->id_pelajar);
+        //get nilai
+        foreach($exam_groups as $exam_group) {
 
-         //jika nilai / nilai kosong, maka buat baru
-         if($nilai == null) {
-//             dd('Check 3');
-             //create defaul nilai
-             $nilai = new nilai();
-             $nilai->id_ujian         = $kelompok_ujian->id_ujian;
-             $nilai->id_sesi_ujian = $kelompok_ujian->id_sesi_ujian;
-             $nilai->id_pelajar      = auth()->guard('pelajar')->user()->id_pelajar;
-             $nilai->durasi        = $kelompok_ujian->ujian->durasi * 60000;
-             $nilai->total_benar   = 0;
-             $nilai->nilai           = 0;
-             $nilai->save();
-//dd($nilai);
-         }
+            //get data nilai / grade
+            $grade = Grade::where('exam_id', $exam_group->exam_id)
+                ->where('student_id', auth()->guard('student')->user()->id)
+                ->first();
 
+            //jika nilai / grade kosong, maka buat baru
+            if($grade == null) {
 
-         $data[] = [
-             'kelompok_ujian' => $kelompok_ujian,
-             'nilai'      => $nilai
-         ];
+                //create defaul grade
+                $grade = new Grade();
+                $grade->exam_id         = $exam_group->exam_id;
+                $grade->exam_session_id = $exam_group->exam_session_id;
+                $grade->student_id      = auth()->guard('student')->user()->id;
+                $grade->duration        = $exam_group->exam->duration * 60000;
+                $grade->total_correct   = 0;
+                $grade->grade           = 0;
+                $grade->save();
 
-     }
-//        dd($nilai);
-//        dd('Check 4', $data);
-//        dd($data);
-     //return with inertia
-     return inertia('Pelajar/Dashboard/Index', [
-         'kelompok_ujians' => $data,
-     ]);
+            }
+
+            $data[] = [
+                'exam_group' => $exam_group,
+                'grade'      => $grade
+            ];
+
+        }
+
+        //return with inertia
+        return inertia('Pelajar/Dashboard/Index', [
+            'exam_groups' => $data,
+        ]);
     }
 }

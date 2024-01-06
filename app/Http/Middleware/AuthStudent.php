@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class AuthPelajar
+class AuthStudent
 {
     /**
      * Handle an incoming request.
@@ -16,15 +16,15 @@ class AuthPelajar
      */
     public function handle(Request $request, Closure $next)
     {
-
-        $pelajar = auth()->guard('pelajar')->user();
+        //check if user is logged in
+        $student = auth()->guard('student')->user();
 
         //if not, redirect to login page
-        if (!$pelajar) {
+        if (!$student) {
             return redirect('/');
         }
 
-
+        //if user is logged in, continue to next middleware
         return $next($request);
     }
 }

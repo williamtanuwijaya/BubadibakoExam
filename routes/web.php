@@ -13,11 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-//prefix "admin"
 Route::prefix('admin')->group(function() {
 
     //middleware "auth"
@@ -27,10 +22,10 @@ Route::prefix('admin')->group(function() {
         Route::get('/dashboard', App\Http\Controllers\Admin\DashboardController::class)->name('admin.dashboard');
 
         //route resource lessons
-        Route::resource('/mata_pelajaran', \App\Http\Controllers\Admin\mata_pelajaranController::class, ['as' => 'admin']);
+        Route::resource('/lessons', \App\Http\Controllers\Admin\mata_pelajaranController::class, ['as' => 'admin']);
 
         //route resource classrooms
-        Route::resource('/kelas', \App\Http\Controllers\Admin\kelasController::class, ['as' => 'admin']);
+        Route::resource('/classrooms', \App\Http\Controllers\Admin\KelasController::class, ['as' => 'admin']);
 
         //route student import
         Route::get('/students/import', [\App\Http\Controllers\Admin\SiswaController::class, 'import'])->name('admin.students.import');
@@ -41,13 +36,14 @@ Route::prefix('admin')->group(function() {
         //route resource students
         Route::resource('/students', \App\Http\Controllers\Admin\SiswaController::class, ['as' => 'admin']);
 
+        //route resource exams
+        Route::resource('/exams', \App\Http\Controllers\Admin\UjianController::class, ['as' => 'admin']);
 
         //custom route for create question exam
         Route::get('/exams/{exam}/questions/create', [\App\Http\Controllers\Admin\UjianController::class, 'createQuestion'])->name('admin.exams.createQuestion');
 
         //custom route for store question exam
         Route::post('/exams/{exam}/questions/store', [\App\Http\Controllers\Admin\UjianController::class, 'storeQuestion'])->name('admin.exams.storeQuestion');
-
 
         //custom route for edit question exam
         Route::get('/exams/{exam}/questions/{question}/edit', [\App\Http\Controllers\Admin\UjianController::class, 'editQuestion'])->name('admin.exams.editQuestion');
@@ -64,8 +60,8 @@ Route::prefix('admin')->group(function() {
         //route student import
         Route::post('/exams/{exam}/questions/import', [\App\Http\Controllers\Admin\UjianController::class, 'storeImport'])->name('admin.exam.questionStoreImport');
 
-        //route resource exams
-        Route::resource('/exams', \App\Http\Controllers\Admin\UjianController::class, ['as' => 'admin']);
+        //route resource exam_sessions
+        Route::resource('/exam_sessions', \App\Http\Controllers\Admin\SesiUjianController::class, ['as' => 'admin']);
 
         //custom route for enrolle create
         Route::get('/exam_sessions/{exam_session}/enrolle/create', [\App\Http\Controllers\Admin\SesiUjianController::class, 'createEnrolle'])->name('admin.exam_sessions.createEnrolle');
@@ -75,9 +71,6 @@ Route::prefix('admin')->group(function() {
 
         //custom route for enrolle destroy
         Route::delete('/exam_sessions/{exam_session}/enrolle/{exam_group}/destroy', [\App\Http\Controllers\Admin\SesiUjianController::class, 'destroyEnrolle'])->name('admin.exam_sessions.destroyEnrolle');
-
-        //route resource exam_sessions
-        Route::resource('/exam_sessions', \App\Http\Controllers\Admin\SesiUjianController::class, ['as' => 'admin']);
 
         //route index reports
         Route::get('/reports', [\App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.reports.index');
@@ -94,8 +87,8 @@ Route::prefix('admin')->group(function() {
 Route::get('/', function () {
 
     //cek session student
-    if(auth()->guard('pelajar')->check()) {
-        return redirect()->route('pelajar.dashboard');
+    if(auth()->guard('student')->check()) {
+        return redirect()->route('student.dashboard');
     }
 
     //return view login
@@ -103,38 +96,37 @@ Route::get('/', function () {
 });
 
 //login students
-Route::post('/pelajar/login', \App\Http\Controllers\Pelajar\LoginController::class)->name('student.login');
-
+Route::post('/students/login', \App\Http\Controllers\Pelajar\LoginController::class)->name('student.login');
 
 //prefix "student"
-Route::prefix('pelajar')->group(function() {
+Route::prefix('student')->group(function() {
 
     //middleware "student"
-    Route::group(['middleware' => 'pelajar'], function () {
+    Route::group(['middleware' => 'student'], function () {
 
         //route dashboard
-        Route::get('/dashboard', App\Http\Controllers\Pelajar\DashboardController::class)->name('pelajar.dashboard');
+        Route::get('/dashboard', App\Http\Controllers\Pelajar\DashboardController::class)->name('student.dashboard');
 
-          //route exam confirmation
-          Route::get('/konfirmasi-ujian/{id}', [App\Http\Controllers\Pelajar\UjianController::class, 'confirmation'])->name('student.exams.confirmation');
+        //route exam confirmation
+        Route::get('/exam-confirmation/{id}', [App\Http\Controllers\Pelajar\UjianController::class, 'confirmation'])->name('student.exams.confirmation');
 
-           //route exam start
-        Route::get('/mulai-ujian/{id}', [App\Http\Controllers\Pelajar\UjianController::class, 'startExam'])->name('student.exams.startExam');
+        //route exam start
+        Route::get('/exam-start/{id}', [App\Http\Controllers\Pelajar\UjianController::class, 'startExam'])->name('student.exams.startExam');
 
         //route exam show
-        Route::get('/mulai-ujian/{id}/{page}', [App\Http\Controllers\Pelajar\UjianController::class, 'show'])->name('student.exams.show');
+        Route::get('/exam/{id}/{page}', [App\Http\Controllers\Pelajar\UjianController::class, 'show'])->name('student.exams.show');
 
         //route exam update duration
-        Route::put('/durasi-ujian/update/{id_nilai}', [App\Http\Controllers\Pelajar\UjianController::class, 'updateDuration'])->name('student.exams.update_duration');
+        Route::put('/exam-duration/update/{grade_id}', [App\Http\Controllers\Pelajar\UjianController::class, 'updateDuration'])->name('student.exams.update_duration');
 
         //route answer question
-        Route::post('/jawaban-ujian', [App\Http\Controllers\Pelajar\UjianController::class, 'jawabanQuestion'])->name('student.exams.answerQuestion');
+        Route::post('/exam-answer', [App\Http\Controllers\Pelajar\UjianController::class, 'answerQuestion'])->name('student.exams.answerQuestion');
 
-         //route exam end
-         Route::post('/akhiri-ujian', [App\Http\Controllers\Pelajar\UjianController::class, 'endExam'])->name('student.exams.endExam');
+        //route exam end
+        Route::post('/exam-end', [App\Http\Controllers\Pelajar\UjianController::class, 'endExam'])->name('student.exams.endExam');
 
-         //route exam result
-         Route::get('/hasil-ujian/{id_kelompok_ujian}', [App\Http\Controllers\Pelajar\UjianController::class, 'resultExam'])->name('student.exams.resultExam');
-        });
+        //route exam result
+        Route::get('/exam-result/{exam_group_id}', [App\Http\Controllers\Pelajar\UjianController::class, 'resultExam'])->name('student.exams.resultExam');
+    });
 
 });

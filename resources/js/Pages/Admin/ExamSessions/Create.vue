@@ -13,26 +13,26 @@
                         <hr>
                         <form @submit.prevent="submit">
 
-                            <div class="col-md-6">
                             <div class="row">
+                                <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Nama Sesi</label>
                                         <input type="text" class="form-control" placeholder="Masukkan Nama Sesi"
-                                               v-model="form.sesi_ujian">
-                                        <div v-if="errors.sesi_ujian" class="alert alert-danger mt-2">
-                                            {{ errors.sesi_ujian }}
+                                               v-model="form.title">
+                                        <div v-if="errors.title" class="alert alert-danger mt-2">
+                                            {{ errors.title }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Ujian</label>
-                                        <select class="form-select" v-model="form.id_ujian">
-                                            <option v-for="(exam, index) in exams" :key="index" :value="exam.id_ujian">
-                                                {{ exam.nama_ujian }}</option>
+                                        <select class="form-select" v-model="form.exam_id">
+                                            <option v-for="(exam, index) in exams" :key="index" :value="exam.id">
+                                                {{ exam.title }}</option>
                                         </select>
-                                        <div v-if="errors.id_ujian" class="alert alert-danger mt-2">
-                                            {{ errors.id_ujian }}
+                                        <div v-if="errors.exam_id" class="alert alert-danger mt-2">
+                                            {{ errors.exam_id }}
                                         </div>
                                     </div>
                                 </div>
@@ -43,27 +43,26 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Waktu Mulai</label>
-                                        <Datepicker v-model="form.waktu_mulai" class="form"/>
-                                        <div v-if="errors.waktu_mulai" class="alert alert-danger mt-2">
-                                            {{ errors.waktu_mulai }}
+                                        <Datepicker v-model="form.start_time" class="form"/>
+                                        <div v-if="errors.start_time" class="alert alert-danger mt-2">
+                                            {{ errors.start_time }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Waktu Selesai</label>
-                                        <Datepicker v-model="form.waktu_selesai" />
-                                        <div v-if="errors.waktu_selesai" class="alert alert-danger mt-2">
-                                            {{ errors.waktu_selesai }}
+                                        <Datepicker v-model="form.end_time" class="form"/>
+                                        <div v-if="errors.end_time" class="alert alert-danger mt-2">
+                                            {{ errors.end_time }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="button">
+
                             <button type="submit" class="btn btn-md btn-primary border-0 shadow me-2">Simpan</button>
                             <button type="reset" class="btn btn-md btn-warning border-0 shadow">Reset</button>
-                            </div>
                         </form>
                     </div>
                 </div>
@@ -122,10 +121,10 @@ export default {
 
         //define form with reactive
         const form = reactive({
-            sesi_ujian: '',
-            id_ujian: '',
-            waktu_mulai: '',
-            waktu_selesai: '',
+            title: '',
+            exam_id: '',
+            start_time: '',
+            end_time: '',
         });
 
         //method "submit"
@@ -134,10 +133,10 @@ export default {
             //send data to server
             Inertia.post('/admin/exam_sessions', {
                 //data
-                sesi_ujian: form.sesi_ujian,
-                id_ujian: form.id_ujian,
-                waktu_mulai: form.waktu_mulai,
-                waktu_selesai: form.waktu_selesai,
+                title: form.title,
+                exam_id: form.exam_id,
+                start_time: form.start_time,
+                end_time: form.end_time,
             }, {
                 onSuccess: () => {
                     //show success alert

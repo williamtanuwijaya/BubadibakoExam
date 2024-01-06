@@ -45,14 +45,14 @@
                                 <tbody>
                                 <tr v-for="(exam, index) in exams.data" :key="index">
                                     <td class="fw-bold text-center">{{ ++index + (exams.current_page - 1) * exams.per_page }}</td>
-                                    <td>{{ exam.nama_ujian }}</td>
-                                    <td>{{ exam.mata_pelajaran.nama_mapel }}</td>
-                                    <td class="text-center">{{ exam.kelas.nama_kelas }}</td>
-                                    <td class="text-center">{{ exam.pertanyaan.length }}</td>
+                                    <td>{{ exam.title }}</td>
+                                    <td>{{ exam.lesson.title }}</td>
+                                    <td class="text-center">{{ exam.classroom.title }}</td>
+                                    <td class="text-center">{{ exam.questions.length }}</td>
                                     <td class="text-center">
-                                        <Link :href="`/admin/exams/${exam.id_ujian}`" class="btn btn-sm btn-primary border-0 shadow me-2" type="button"><i class="fa fa-plus-circle"></i></Link>
-                                        <Link :href="`/admin/exams/${exam.id_ujian}/edit`" class="btn btn-sm btn-info border-0 shadow me-2" type="button"><i class="fa fa-pencil-alt"></i></Link>
-                                        <button @click.prevent="destroy(exam.id_ujian)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
+                                        <Link :href="`/admin/exams/${exam.id}`" class="btn btn-sm btn-primary border-0 shadow me-2" type="button"><i class="fa fa-plus-circle"></i></Link>
+                                        <Link :href="`/admin/exams/${exam.id}/edit`" class="btn btn-sm btn-info border-0 shadow me-2" type="button"><i class="fa fa-pencil-alt"></i></Link>
+                                        <button @click.prevent="destroy(exam.id)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -115,13 +115,14 @@ export default {
         //define method search
         const handleSearch = () => {
             Inertia.get('/admin/exams', {
+
                 //send params "q" with value from state "search"
                 q: search.value,
             });
         }
 
         //define method destroy
-        const destroy = (id_ujian) => {
+        const destroy = (id) => {
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: "Anda tidak akan dapat mengembalikan ini!",
@@ -134,7 +135,7 @@ export default {
                 .then((result) => {
                     if (result.isConfirmed) {
 
-                        Inertia.delete(`/admin/exams/${id_ujian}`);
+                        Inertia.delete(`/admin/exams/${id}`);
 
                         Swal.fire({
                             title: 'Deleted!',
@@ -146,12 +147,14 @@ export default {
                     }
                 })
         }
+
         //return
         return {
             search,
             handleSearch,
-            destroy
+            destroy,
         }
+
     }
 }
 

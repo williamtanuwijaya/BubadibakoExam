@@ -2,14 +2,14 @@
     <nav>
         <ul :class="`pagination pagination-sm justify-content-${align} mb-0 mt-4`">
             <li :class="[
-                    'page-item', 
+                    'page-item',
                     link.url == null ? 'disabled' : '',
                     link.active ? 'active' : '',
-                ]" 
+                ]"
                 v-for="(link, index) in links" :key="index">
-                <Link 
-                    class="page-link" 
-                    :href="link.url === null ? '#' : link.url" 
+                <Link
+                    class="page-link"
+                    :href="link.url === null ? '#' : link.url"
                     v-html="link.label">
                 </Link>
             </li>
@@ -19,19 +19,19 @@
 
 <script>
 
-    //import Link
-    import { Link } from '@inertiajs/inertia-vue3';
+//import Link
+import {Link} from '@inertiajs/inertia-vue3';
 
-    export default {
-        props: {
-            links: Array,
-            align: String
-        },
+export default {
+    props: {
+        links: Array,
+        align: String
+    },
 
-        components: {
-            Link,
-        },
-    }
+    components: {
+        Link,
+    },
+}
 </script>
 
 <style>

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Pelajar;
 
-use App\Http\Controllers\Controller;
-use App\Models\pelajar;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class LoginController extends Controller
 {
@@ -16,26 +16,26 @@ class LoginController extends Controller
      */
     public function __invoke(Request $request)
     {
-         //validate the form data
-         $this->validate($request, [
+        //validate the form data
+        $this->validate($request, [
             'nisn'      => 'required',
             'password'  => 'required',
         ]);
 
-        //cek nisn dan kata_sandi
-        $pelajar = pelajar::where([
+        //cek nisn dan password
+        $student = Student::where([
             'nisn'      => $request->nisn,
-            'kata_sandi'  => $request->password
+            'password'  => $request->password
         ])->first();
 
-        if(!$pelajar) {
-            return redirect()->back()->with('error', 'NISN atau kata_sandi salah');
+        if(!$student) {
+            return redirect()->back()->with('error', 'NISN atau Password salah');
         }
-        
+
         //login the user
-        auth()->guard('pelajar')->login($pelajar);
+        auth()->guard('student')->login($student);
 
         //redirect to dashboard
-        return redirect()->route('pelajar.dashboard');
+        return redirect()->route('student.dashboard');
     }
 }

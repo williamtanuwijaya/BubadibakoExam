@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\ujian;
-use App\Models\pelajar;
-use App\Models\kelas;
-use App\Models\sesi_ujian;
+use App\Models\Exam;
+use App\Models\Student;
+use App\Models\Classroom;
+use App\Models\ExamSession;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -20,19 +20,16 @@ class DashboardController extends Controller
     public function __invoke(Request $request)
     {
         //count students
-        $students = pelajar::count();
+        $students = Student::count();
 
         //count exams
-        $exams = ujian::count();
+        $exams = Exam::count();
 
         //count exam sessions
-        $exam_sessions = sesi_ujian::count();
+        $exam_sessions = ExamSession::count();
 
         //count classrooms
-        $classrooms = kelas::count();
-
-        // Log data for debugging
-//        \Log::info("Dashboard Data: ", compact('students', 'exams', 'exam_sessions', 'classrooms'));
+        $classrooms = Classroom::count();
 
         return inertia('Admin/Dashboard/Index', [
             'students'      => $students,

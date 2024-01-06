@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sesi_ujians', function (Blueprint $table) {
-            $table->id('id_sesi_ujian');
-            $table->foreignId('id_ujian')->references('id_ujian')->on('ujians')->cascadeOnDelete();
-            $table->string('sesi_ujian');
-            $table->dateTime('waktu_mulai');
-            $table->dateTime('waktu_selesai');
+        Schema::create('classrooms', function (Blueprint $table) {
+            $table->id();
+            $table->string('title')->unique();
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sesi_ujians');
+        Schema::dropIfExists('classrooms');
     }
 };

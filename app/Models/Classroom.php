@@ -5,21 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class kelas extends Model
+class Classroom extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'id_kelas';
-     /**
+
+    /**
      * fillable
      *
      * @var array
      */
     protected $fillable = [
-        'nama_kelas',
+        'title',
     ];
-
-    public function pelajar()
-    {
-        return $this->hasMany(pelajar::class, 'id_kelas');
-    }
 }

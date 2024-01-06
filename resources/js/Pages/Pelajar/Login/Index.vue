@@ -11,6 +11,11 @@
                 <div v-if="$page.props.session.error" class="alert alert-danger mt-2">
                     {{ $page.props.session.error }}
                 </div>
+                <div style="text-align: center;">
+                    <img src="/assets/images/ppsk.png" alt="logo" style="align-items: center; height: 190px;" class="three-d-logo" >
+                    <h5>CBT SMA XAVERIUS 1 PALEMBANG</h5>
+                    <h6>by Bubadibako Team</h6>
+                </div>
                 <form @submit.prevent="submit" class="mt-4">
 
                     <div class="form-group mb-4">
@@ -34,7 +39,7 @@
                                     <i class="fa fa-lock"></i>
                                 </span>
                                 <input type="password" placeholder="Password" class="form-control"
-                                    v-model="form.password">
+                                       v-model="form.password">
                             </div>
                             <div v-if="errors.password" class="alert alert-danger mt-2">
                                 {{ errors.password }}
@@ -51,7 +56,7 @@
                         </div>
 
                     </div>
-                    
+
                     <div class="d-grid">
                         <button type="submit" class="btn btn-gray-800">LOGIN</button>
                     </div>
@@ -62,68 +67,68 @@
 </template>
 
 <script>
-    //import layout
-    import LayoutPelajar from '../../../Layouts/Pelajar.vue';
+//import layout
+import LayoutStudent from '../../../Layouts/Student.vue';
 
-    //import Head from Inertia
-    import {
+//import Head from Inertia
+import {
+    Head
+} from '@inertiajs/inertia-vue3';
+
+//import reactive
+import {
+    reactive
+} from 'vue';
+
+//import inertia adapter
+import {
+    Inertia
+} from '@inertiajs/inertia';
+
+export default {
+
+    //layout
+    layout: LayoutStudent,
+
+    //register component
+    components: {
         Head
-    } from '@inertiajs/inertia-vue3';
+    },
 
-    //import reactive
-    import {
-        reactive
-    } from 'vue';
+    //props
+    props: {
+        errors: Object,
+    },
 
-    //import inertia adapter
-    import {
-        Inertia
-    } from '@inertiajs/inertia';
+    //inisialisasi composition API
+    setup() {
 
-    export default {
+        //define form state
+        const form = reactive({
+            nisn: '',
+            password: '',
+        });
 
-        //layout
-        layout: LayoutPelajar,
+        //submit method
+        const submit = () => {
 
-        //register component
-        components: {
-            Head
-        },
+            //send data to server
+            Inertia.post('/students/login', {
 
-        //props
-        props: {
-            errors: Object,
-        },
-
-        //inisialisasi composition API
-        setup() {
-
-            //define form state
-            const form = reactive({
-                nisn: '',
-                password: '',
+                //data
+                nisn: form.nisn,
+                password: form.password,
             });
-
-            //submit method
-            const submit = () => {
-
-                //send data to server
-                Inertia.post('/pelajar/login', {
-
-                    //data
-                    nisn: form.nisn,
-                    password: form.password,
-                });
-            }
-
-            //return
-            return {
-                form,
-                submit
-            }
         }
 
+        //return
+        return {
+            form,
+            submit
+        }
     }
+
+}
 
 </script>
 

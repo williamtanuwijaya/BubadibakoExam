@@ -57,13 +57,13 @@
                                     <td class="fw-bold text-center">
                                         {{ ++index + (students.current_page - 1) * students.per_page }}</td>
                                     <td>{{ student.nisn }}</td>
-                                    <td>{{ student.nama }}</td>
-                                    <td class="text-center">{{ student.kelas.nama_kelas }}</td>
-                                    <td class="text-center">{{ student.jenis_kelamin }}</td>
-                                    <td>{{ student.kata_sandi }}</td>
+                                    <td>{{ student.name }}</td>
+                                    <td class="text-center">{{ student.classroom.title }}</td>
+                                    <td class="text-center">{{ student.gender }}</td>
+                                    <td>{{ student.password }}</td>
                                     <td class="text-center">
-                                        <Link :href="`/admin/students/${student.id_pelajar}/edit`" class="btn btn-sm btn-info border-0 shadow me-2" type="button"><i class="fa fa-pencil-alt"></i></Link>
-                                        <button @click.prevent="destroy(student.id_pelajar)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
+                                        <Link :href="`/admin/students/${student.id}/edit`" class="btn btn-sm btn-info border-0 shadow me-2" type="button"><i class="fa fa-pencil-alt"></i></Link>
+                                        <button @click.prevent="destroy(student.id)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -95,13 +95,13 @@ import {
     ref
 } from 'vue';
 
-//import sweet alert2
-import Swal from 'sweetalert2';
-
 //import inertia adapter
 import {
     Inertia
 } from '@inertiajs/inertia';
+
+//import sweet alert2
+import Swal from 'sweetalert2';
 
 export default {
     //layout
@@ -133,8 +133,9 @@ export default {
                 q: search.value,
             });
         }
+
         //define method destroy
-        const destroy = (id_pelajar) => {
+        const destroy = (id) => {
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: "Anda tidak akan dapat mengembalikan ini!",
@@ -147,7 +148,7 @@ export default {
                 .then((result) => {
                     if (result.isConfirmed) {
 
-                        Inertia.delete(`/admin/students/${id_pelajar}`);
+                        Inertia.delete(`/admin/students/${id}`);
 
                         Swal.fire({
                             title: 'Deleted!',
@@ -159,11 +160,12 @@ export default {
                     }
                 })
         }
+
         //return
         return {
             search,
             handleSearch,
-            destroy
+            destroy,
         }
 
     }

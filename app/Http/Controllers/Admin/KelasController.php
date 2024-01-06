@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\kelas;
+use App\Models\Classroom;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 
-class kelasController extends Controller
+class KelasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,17 +15,17 @@ class kelasController extends Controller
      */
     public function index()
     {
-        //get kelass
-        $kelass = kelas::when(request()->q, function($kelass) {
-            $kelass = $kelass->where('nama_kelas', 'like', '%'. request()->q . '%');
+        //get classrooms
+        $classrooms = Classroom::when(request()->q, function($classrooms) {
+            $classrooms = $classrooms->where('title', 'like', '%'. request()->q . '%');
         })->latest()->paginate(5);
 
         //append query string to pagination links
-        $kelass->appends(['q' => request()->q]);
+        $classrooms->appends(['q' => request()->q]);
 
         //render with inertia
         return inertia('Admin/Kelas/Index', [
-            'kelass' => $kelass,
+            'classrooms' => $classrooms,
         ]);
     }
 
@@ -51,32 +50,32 @@ class kelasController extends Controller
     {
         //validate request
         $request->validate([
-            'nama_kelas' => 'required|string|unique:kelas'
+            'title' => 'required|string|unique:classrooms'
         ]);
 
-        //create kelas
-        kelas::create([
-            'nama_kelas' => $request->nama_kelas,
+        //create classroom
+        Classroom::create([
+            'title' => $request->title,
         ]);
 
         //redirect
-        return redirect()->route('admin.kelas.index');
+        return redirect()->route('admin.classrooms.index');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id_kelas
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id_kelas)
+    public function edit($id)
     {
-        //get kelas
-        $kelas = kelas::findOrFail($id_kelas);
+        //get classroom
+        $classroom = Classroom::findOrFail($id);
 
         //render with inertia
         return inertia('Admin/Kelas/Edit', [
-            'kelas' => $kelas,
+            'classroom' => $classroom,
         ]);
     }
 
@@ -84,41 +83,40 @@ class kelasController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id_kelas
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, kelas $kelas)
+    public function update(Request $request, Classroom $classroom)
     {
         //validate request
         $request->validate([
-            'nama_kelas' => 'required|string|unique:kelas,nama_kelas,'.$kelas->id_kelas.',id_kelas',
+            'title' => 'required|string|unique:classrooms,title,'.$classroom->id,
         ]);
 
-        kelas::where('id_kelas', $request->id_kelas)
-            ->update(['nama_kelas' => $request->nama_kelas]);
+        //update classroom
+        $classroom->update([
+            'title' => $request->title,
+        ]);
 
         //redirect
-        return redirect()->route('admin.kelas.index');
+        return redirect()->route('admin.classrooms.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id_kelas
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id_kelas)
+    public function destroy($id)
     {
-        //get kelas
-        $kelas = kelas::findOrFail($id_kelas);
+        //get classroom
+        $classroom = Classroom::findOrFail($id);
 
-        //delete kelas
-        $kelas->delete();
+        //delete classroom
+        $classroom->delete();
 
         //redirect
-        return redirect()->route('admin.kelas.index');
+        return redirect()->route('admin.classrooms.index');
     }
-
-
-
 }

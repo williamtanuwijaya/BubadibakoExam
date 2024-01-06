@@ -13,16 +13,16 @@ class NilaiExport implements FromCollection, WithMapping, WithHeadings
      *
      * @var mixed
      */
-    protected $nilai;
+    protected $grades;
 
     /**
      * __construct
      *
-     * @param  mixed $nilai
+     * @param  mixed $grade
      * @return void
      */
-    public function __construct($nilais) {
-        $this->nilais = $nilais;
+    public function __construct($grades) {
+        $this->grades = $grades;
     }
 
     /**
@@ -30,17 +30,17 @@ class NilaiExport implements FromCollection, WithMapping, WithHeadings
      */
     public function collection()
     {
-        return $this->nilais;
+        return $this->grades;
     }
 
-    public function map($nilais) : array {
+    public function map($grades) : array {
         return [
-            $nilais->ujian->nama_ujian,
-            $nilais->sesi_ujian->sesi_ujian,
-            $nilais->pelajar->nama,
-            $nilais->ujian->kelas->nama_kelas,
-            $nilais->ujian->mata_pelajaran->nama_mapel,
-            $nilais->nilai,
+            $grades->exam->title,
+            $grades->exam_session->title,
+            $grades->student->name,
+            $grades->exam->classroom->title,
+            $grades->exam->lesson->title,
+            $grades->grade,
         ] ;
     }
 

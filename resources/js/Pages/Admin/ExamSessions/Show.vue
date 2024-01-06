@@ -17,27 +17,27 @@
                                 <tbody>
                                 <tr>
                                     <td style="width:30%" class="fw-bold">Nama Ujian</td>
-                                    <td>{{ exam_session.ujian.nama_ujian }}</td>
+                                    <td>{{ exam_session.exam.title }}</td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">Mata Pelajaran</td>
-                                    <td>{{ exam_session.ujian.mata_pelajaran.nama_mapel }}</td>
+                                    <td>{{ exam_session.exam.lesson.title }}</td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">Kelas</td>
-                                    <td>{{ exam_session.ujian.kelas.nama_kelas }}</td>
+                                    <td>{{ exam_session.exam.classroom.title }}</td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">Sesi</td>
-                                    <td>{{ exam_session.sesi_ujian }}</td>
+                                    <td>{{ exam_session.title }}</td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">Mulai</td>
-                                    <td>{{ exam_session.waktu_mulai }}</td>
+                                    <td>{{ exam_session.start_time }}</td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">Selesai</td>
-                                    <td>{{ exam_session.waktu_selesai }}</td>
+                                    <td>{{ exam_session.end_time }}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -52,7 +52,7 @@
                         <h5> <i class="fa fa-user-plus"></i> Enrolled Siswa</h5>
                         <hr>
 
-                        <Link :href="`/admin/exam_sessions/${exam_session.id_sesi_ujian}/enrolle/create`" class="btn btn-md btn-primary border-0 shadow me-2" type="button"><i class="fa fa-user-plus"></i> Enrolle Siswa</Link>
+                        <Link :href="`/admin/exam_sessions/${exam_session.id}/enrolle/create`" class="btn btn-md btn-primary border-0 shadow me-2" type="button"><i class="fa fa-user-plus"></i> Enrolle Siswa</Link>
 
                         <div class="table-responsive mt-3">
                             <table class="table table-bordered table-centered table-nowrap mb-0 rounded">
@@ -67,19 +67,19 @@
                                 </thead>
                                 <div class="mt-2"></div>
                                 <tbody>
-                                <tr v-for="(data, index) in exam_session.kelompok_ujians.data" :key="index">
-                                    <td class="fw-bold text-center">{{ ++index + (exam_session.kelompok_ujians.current_page - 1) * exam_session.kelompok_ujians.per_page }}</td>
-                                    <td>{{ data.pelajar.nama }}</td>
-                                    <td class="text-center">{{ data.pelajar.kelas.nama_kelas }}</td>
-                                    <td class="text-center">{{ data.pelajar.jenis_kelamin }}</td>
+                                <tr v-for="(data, index) in exam_session.exam_groups.data" :key="index">
+                                    <td class="fw-bold text-center">{{ ++index + (exam_session.exam_groups.current_page - 1) * exam_session.exam_groups.per_page }}</td>
+                                    <td>{{ data.student.name }}</td>
+                                    <td class="text-center">{{ data.student.classroom.title }}</td>
+                                    <td class="text-center">{{ data.student.gender }}</td>
                                     <td class="text-center">
-                                        <button @click.prevent="destroy(exam_session.id_sesi_ujian, data.id_kelompok_ujian)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
+                                        <button @click.prevent="destroy(exam_session.id, data.id)" class="btn btn-sm btn-danger border-0"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <Pagination :links="exam_session.kelompok_ujians.links" align="end" />
+                        <Pagination :links="exam_session.exam_groups.links" align="end" />
                     </div>
                 </div>
 
@@ -95,17 +95,17 @@ import LayoutAdmin from '../../../Layouts/Admin.vue';
 //import component pagination
 import Pagination from '../../../Components/Pagination.vue';
 
-//import inertia adapter
-import { Inertia } from '@inertiajs/inertia';
-
-//import sweet alert2
-import Swal from 'sweetalert2';
-
 //import Heade and Link from Inertia
 import {
     Head,
     Link
 } from '@inertiajs/inertia-vue3';
+
+//import inertia adapter
+import { Inertia } from '@inertiajs/inertia';
+
+//import sweet alert2
+import Swal from 'sweetalert2';
 
 export default {
 
@@ -124,11 +124,12 @@ export default {
         errors: Object,
         exam_session: Object,
     },
+
     //inisialisasi composition API
     setup() {
 
         //define method destroy
-        const destroy = (id_sesi_ujian, id_kelompok_ujian) => {
+        const destroy = (exam_session_id, exam_group_id) => {
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: "Anda tidak akan dapat mengembalikan ini!",
@@ -141,7 +142,7 @@ export default {
                 .then((result) => {
                     if (result.isConfirmed) {
 
-                        Inertia.delete(`/admin/exam_sessions/${id_sesi_ujian}/enrolle/${id_kelompok_ujian}/destroy`);
+                        Inertia.delete(`/admin/exam_sessions/${exam_session_id}/enrolle/${exam_group_id}/destroy`);
 
                         Swal.fire({
                             title: 'Deleted!',
@@ -160,6 +161,7 @@ export default {
         }
 
     }
+
 }
 
 </script>

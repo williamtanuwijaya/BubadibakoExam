@@ -25,9 +25,9 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Nama Lengkap</label>
-                                        <input type="text" class="form-control" placeholder="Masukkan Nama Siswa" v-model="form.nama">
-                                        <div v-if="errors.nama" class="alert alert-danger mt-2">
-                                            {{ errors.nama }}
+                                        <input type="text" class="form-control" placeholder="Masukkan Nama Siswa" v-model="form.name">
+                                        <div v-if="errors.name" class="alert alert-danger mt-2">
+                                            {{ errors.name }}
                                         </div>
                                     </div>
                                 </div>
@@ -37,23 +37,23 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Kelas</label>
-                                        <select class="form-select" v-model="form.id_kelas">
-                                            <option v-for="(classroom, index) in classrooms" :key="index" :value="classroom.id_kelas">{{ classroom.nama_kelas }}</option>
+                                        <select class="form-select" v-model="form.classroom_id">
+                                            <option v-for="(classroom, index) in classrooms" :key="index" :value="classroom.id">{{ classroom.title }}</option>
                                         </select>
-                                        <div v-if="errors.id_kelas" class="alert alert-danger mt-2">
-                                            {{ errors.id_kelas }}
+                                        <div v-if="errors.classroom_id" class="alert alert-danger mt-2">
+                                            {{ errors.classroom_id }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Jenis Kelamin</label>
-                                        <select class="form-select" v-model="form.jenis_kelamin">
+                                        <select class="form-select" v-model="form.gender">
                                             <option value="L">Laki - Laki</option>
                                             <option value="P">Perempuan</option>
                                         </select>
-                                        <div v-if="errors.jenis_kelamin" class="alert alert-danger mt-2">
-                                            {{ errors.jenis_kelamin }}
+                                        <div v-if="errors.gender" class="alert alert-danger mt-2">
+                                            {{ errors.gender }}
                                         </div>
                                     </div>
                                 </div>
@@ -63,16 +63,16 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Password</label>
-                                        <input type="password" class="form-control" placeholder="Masukkan Password" v-model="form.kata_sandi">
-                                        <div v-if="errors.kata_sandi" class="alert alert-danger mt-2">
-                                            {{ errors.kata_sandi }}
+                                        <input type="password" class="form-control" placeholder="Masukkan Password" v-model="form.password">
+                                        <div v-if="errors.password" class="alert alert-danger mt-2">
+                                            {{ errors.password }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Konfirmasi Password</label>
-                                        <input type="password" class="form-control" placeholder="Masukkan Konfirmasi Password" v-model="form.kata_sandi_confirmation">
+                                        <input type="password" class="form-control" placeholder="Masukkan Konfirmasi Password" v-model="form.password_confirmation">
                                     </div>
                                 </div>
                             </div>
@@ -131,25 +131,25 @@
             //define form with reactive
             const form = reactive({
                 nisn: props.student.nisn,
-                nama: props.student.nama,
-                id_kelas: props.student.id_kelas,
-                jenis_kelamin: props.student.jenis_kelamin,
-                kata_sandi: '',
-                kata_sandi_confirmation: ''
+                name: props.student.name,
+                classroom_id: props.student.classroom_id,
+                gender: props.student.gender,
+                password: '',
+                password_confirmation: ''
             });
 
             //method "submit"
             const submit = () => {
 
                 //send data to server
-                Inertia.put(`/admin/students/${props.student.id_pelajar}`, {
+                Inertia.put(`/admin/students/${props.student.id}`, {
                     //data
                     nisn: form.nisn,
-                    nama: form.nama,
-                    id_kelas: form.id_kelas,
-                    jenis_kelamin: form.jenis_kelamin,
-                    kata_sandi: form.kata_sandi,
-                    kata_sandi_confirmation: form.kata_sandi_confirmation
+                    name: form.name,
+                    classroom_id: form.classroom_id,
+                    gender: form.gender,
+                    password: form.password,
+                    password_confirmation: form.password_confirmation
                 }, {
                     onSuccess: () => {
                         //show success alert

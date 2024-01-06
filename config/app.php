@@ -159,7 +159,6 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
-        Maatwebsite\Excel\ExcelServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         Inertia\ServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
@@ -188,6 +187,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
