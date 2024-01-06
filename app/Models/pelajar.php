@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class pelajar extends Model
+class pelajar extends Authenticatable
 {
     use HasFactory;
 
@@ -29,7 +29,7 @@ class pelajar extends Model
      * @return void
      */
     // Model pelajar.php
-    public function classrooms()
+    public function kelas()
     {
         return $this->belongsTo(kelas::class, 'id_kelas');
     }

@@ -43,7 +43,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Waktu Mulai</label>
-                                        <Datepicker v-model="form.waktu_mulai" wrapper-class="custom-datepicker"/>
+                                        <Datepicker v-model="form.waktu_mulai" class="form"/>
                                         <div v-if="errors.waktu_mulai" class="alert alert-danger mt-2">
                                             {{ errors.waktu_mulai }}
                                         </div>
@@ -60,9 +60,10 @@
                                 </div>
                             </div>
 
-
+                            <div class="button">
                             <button type="submit" class="btn btn-md btn-primary border-0 shadow me-2">Simpan</button>
                             <button type="reset" class="btn btn-md btn-warning border-0 shadow">Reset</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -165,7 +166,7 @@ export default {
 </script>
 
 <style>
-    .custom-datepicker{
-        width: 100%;
+    .form{
+        height: 300px;
     }
 </style>

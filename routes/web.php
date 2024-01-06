@@ -89,3 +89,52 @@ Route::prefix('admin')->group(function() {
         Route::get('/reports/export', [\App\Http\Controllers\Admin\LaporanController::class, 'export'])->name('admin.reports.export');
     });
 });
+
+//route homepage
+Route::get('/', function () {
+
+    //cek session student
+    if(auth()->guard('pelajar')->check()) {
+        return redirect()->route('pelajar.dashboard');
+    }
+
+    //return view login
+    return \Inertia\Inertia::render('Pelajar/Login/Index');
+});
+
+//login students
+Route::post('/pelajar/login', \App\Http\Controllers\Pelajar\LoginController::class)->name('student.login');
+
+
+//prefix "student"
+Route::prefix('pelajar')->group(function() {
+
+    //middleware "student"
+    Route::group(['middleware' => 'pelajar'], function () {
+        
+        //route dashboard
+        Route::get('/dashboard', App\Http\Controllers\Pelajar\DashboardController::class)->name('pelajar.dashboard');
+        
+          //route exam confirmation
+          Route::get('/konfirmasi-ujian/{id}', [App\Http\Controllers\Pelajar\UjianController::class, 'confirmation'])->name('student.exams.confirmation');
+   
+           //route exam start
+        Route::get('/mulai-ujian/{id}', [App\Http\Controllers\Pelajar\UjianController::class, 'startExam'])->name('student.exams.startExam');
+        
+        //route exam show
+        Route::get('/mulai-ujian/{id}/{page}', [App\Http\Controllers\Pelajar\UjianController::class, 'show'])->name('student.exams.show');
+   
+        //route exam update duration
+        Route::put('/durasi-ujian/update/{id_nilai}', [App\Http\Controllers\Pelajar\UjianController::class, 'updateDuration'])->name('student.exams.update_duration');
+    
+        //route answer question
+        Route::post('/jawaban-ujian', [App\Http\Controllers\Pelajar\UjianController::class, 'answerQuestion'])->name('student.exams.answerQuestion');
+    
+         //route exam end
+         Route::post('/akhiri-ujian', [App\Http\Controllers\Pelajar\UjianController::class, 'endExam'])->name('student.exams.endExam');
+        
+         //route exam result
+         Route::get('/hasil-ujian/{id_kelompok_ujian}', [App\Http\Controllers\Pelajar\UjianController::class, 'resultExam'])->name('student.exams.resultExam');
+        });
+
+});

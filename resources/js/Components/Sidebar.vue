@@ -30,14 +30,14 @@
                                         d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466 4.176 9.032Z" />
                                 </svg>
                             </span>
-                            <span class="sidebar-text fw-bold">UJIAN ONLINE</span>
+                            <span class="sidebar-text fw-bold">Bubadibako CBT</span>
                         </span>
                         <span>
-                            <span class="badge badge-sm bg-secondary ms-1 text-gray-800">PRO</span>
+                            <span class="badge badge-sm bg-secondary ms-1 text-gray-800">&#128511;</span>
                         </span>
                     </span>
                 </li>
-
+    
                 <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
 
                 <li class="nav-item" :class="{ 'active': $page.url.startsWith('/admin/dashboard') }">

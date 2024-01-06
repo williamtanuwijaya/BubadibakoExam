@@ -5,12 +5,13 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "axios": "^0.27",
+        "axios": "^0.25.0",
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
         "vite": "^3.0.0"
     },
     "dependencies": {
+        "@chenfengyuan/vue-countdown": "^2.0.0",
         "@inertiajs/inertia": "^0.11.0",
         "@inertiajs/inertia-vue3": "^0.6.0",
         "@inertiajs/progress": "^0.2.7",
