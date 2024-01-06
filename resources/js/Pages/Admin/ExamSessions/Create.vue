@@ -169,6 +169,4 @@ export default {
     .form{
         height: 300px;
     }
-
-    
 </style>

@@ -176,7 +176,7 @@ class SesiUjianController extends Controller
         //get students already enrolled
 //        $students_enrolled = kelompok_ujian::where('id_ujian', $exam->id_sesi_ujian)->where('id_sesi_ujian', $exam_session->id_ujian)->pluck('id_pelajar')->all();
 
-        $students = pelajar::with('kelas')->get();
+        $students = pelajar::with('classrooms')->get();
 
         //render with inertia
         return inertia('Admin/ExamGroups/Create', [
