@@ -1,11 +1,13 @@
 <template>
+
     <Head>
         <title>Tambah Soal Ujian - Aplikasi Ujian Online</title>
     </Head>
     <div class="container-fluid mb-5 mt-5">
         <div class="row">
             <div class="col-md-12">
-                <Link :href="`/admin/exams/${exam.id}`" class="btn btn-md btn-primary border-0 shadow mb-3" type="button"><i class="fa fa-long-arrow-alt-left me-2"></i> Kembali</Link>
+                <Link :href="`/admin/exams/${exam.id}`" class="btn btn-md btn-primary border-0 shadow mb-3"
+                    type="button"><i class="fa fa-long-arrow-alt-left me-2"></i> Kembali</Link>
                 <div class="card border-0 shadow">
                     <div class="card-body">
                         <h5><i class="fa fa-question-circle"></i> Tambah Soal Ujian</h5>
@@ -15,107 +17,89 @@
                             <div class="table-responsive mb-4">
                                 <table class="table table-bordered table-centered table-nowrap mb-0 rounded">
                                     <tbody>
-                                    <tr>
-                                        <td style="width:20%" class="fw-bold">Soal</td>
-                                        <td>
-                                            <Editor
-                                                api-key="no-api-key"
-                                                v-model="form.question"
-                                                :init="{
+                                        <tr>
+                                            <td style="width:20%" class="fw-bold">Soal</td>
+                                            <td>
+                                                <Editor api-key="'bepezp5d90820v5lat1y5yomgvk17f14nksbujco7z7w2v9l'"
+                                                    v-model="form.question" :init="{
                                                         menubar: false,
                                                         plugins: 'lists link image emoticons',
                                                         toolbar: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons'
-                                                    }"
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:20%" class="fw-bold">Pilihan A</td>
-                                        <td>
-                                            <Editor
-                                                api-key="no-api-key"
-                                                v-model="form.option_1"
-                                                :init="{
+                                                    }" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%" class="fw-bold">Pilihan A</td>
+                                            <td>
+                                                <Editor api-key="'bepezp5d90820v5lat1y5yomgvk17f14nksbujco7z7w2v9l'"
+                                                    v-model="form.option_1" :init="{
                                                         height: 130,
                                                         menubar: false,
                                                         plugins: 'lists link image emoticons',
                                                         toolbar: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons'
-                                                    }"
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:20%" class="fw-bold">Pilihan B</td>
-                                        <td>
-                                            <Editor
-                                                api-key="no-api-key"
-                                                v-model="form.option_2"
-                                                :init="{
+                                                    }" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%" class="fw-bold">Pilihan B</td>
+                                            <td>
+                                                <Editor api-key="'bepezp5d90820v5lat1y5yomgvk17f14nksbujco7z7w2v9l'"
+                                                    v-model="form.option_2" :init="{
                                                         height: 130,
                                                         menubar: false,
                                                         plugins: 'lists link image emoticons',
                                                         toolbar: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons'
-                                                    }"
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:20%" class="fw-bold">Pilihan C</td>
-                                        <td>
-                                            <Editor
-                                                api-key="no-api-key"
-                                                v-model="form.option_3"
-                                                :init="{
+                                                    }" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%" class="fw-bold">Pilihan C</td>
+                                            <td>
+                                                <Editor api-key="'bepezp5d90820v5lat1y5yomgvk17f14nksbujco7z7w2v9l'"
+                                                    v-model="form.option_3" :init="{
                                                         height: 130,
                                                         menubar: false,
                                                         plugins: 'lists link image emoticons',
                                                         toolbar: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons'
-                                                    }"
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:20%" class="fw-bold">Pilihan D</td>
-                                        <td>
-                                            <Editor
-                                                api-key="no-api-key"
-                                                v-model="form.option_4"
-                                                :init="{
+                                                    }" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%" class="fw-bold">Pilihan D</td>
+                                            <td>
+                                                <Editor api-key="'bepezp5d90820v5lat1y5yomgvk17f14nksbujco7z7w2v9l'"
+                                                    v-model="form.option_4" :init="{
                                                         height: 130,
                                                         menubar: false,
                                                         plugins: 'lists link image emoticons',
                                                         toolbar: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons'
-                                                    }"
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:20%" class="fw-bold">Pilihan E</td>
-                                        <td>
-                                            <Editor
-                                                api-key="no-api-key"
-                                                v-model="form.option_5"
-                                                :init="{
+                                                    }" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%" class="fw-bold">Pilihan E</td>
+                                            <td>
+                                                <Editor api-key="'bepezp5d90820v5lat1y5yomgvk17f14nksbujco7z7w2v9l'"
+                                                    v-model="form.option_5" :init="{
                                                         height: 130,
                                                         menubar: false,
                                                         plugins: 'lists link image emoticons',
                                                         toolbar: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons'
-                                                    }"
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:20%" class="fw-bold">Jawaban Benar</td>
-                                        <td>
-                                            <select class="form-control" v-model="form.answer">
-                                                <option value="1">A</option>
-                                                <option value="2">B</option>
-                                                <option value="3">C</option>
-                                                <option value="4">D</option>
-                                                <option value="5">E</option>
-                                            </select>
-                                        </td>
-                                    </tr>
+                                                    }" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:20%" class="fw-bold">Jawaban Benar</td>
+                                            <td>
+                                                <select class="form-control" v-model="form.answer">
+                                                    <option value="1">A</option>
+                                                    <option value="2">B</option>
+                                                    <option value="3">C</option>
+                                                    <option value="4">D</option>
+                                                    <option value="5">E</option>
+                                                </select>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -224,6 +208,4 @@ export default {
 
 </script>
 
-<style>
-
-</style>
+<style></style>

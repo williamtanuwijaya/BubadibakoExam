@@ -1,11 +1,13 @@
 <template>
+
     <Head>
         <title>Tambah Ujian - Aplikasi Ujian Online</title>
     </Head>
     <div class="container-fluid mb-5 mt-5">
         <div class="row">
             <div class="col-md-12">
-                <Link href="/admin/exams" class="btn btn-md btn-primary border-0 shadow mb-3" type="button"><i class="fa fa-long-arrow-alt-left me-2"></i> Kembali</Link>
+                <Link href="/admin/exams" class="btn btn-md btn-primary border-0 shadow mb-3" type="button"><i
+                    class="fa fa-long-arrow-alt-left me-2"></i> Kembali</Link>
                 <div class="card border-0 shadow">
                     <div class="card-body">
                         <h5><i class="fa fa-edit"></i> Tambah Ujian</h5>
@@ -14,7 +16,8 @@
 
                             <div class="mb-4">
                                 <label>Nama Ujian</label>
-                                <input type="text" class="form-control" placeholder="Masukkan Nama Ujian" v-model="form.title">
+                                <input type="text" class="form-control" placeholder="Masukkan Nama Ujian"
+                                    v-model="form.title">
                                 <div v-if="errors.title" class="alert alert-danger mt-2">
                                     {{ errors.title }}
                                 </div>
@@ -25,7 +28,8 @@
                                     <div class="mb-4">
                                         <label>Mata Pelajaran</label>
                                         <select class="form-select" v-model="form.lesson_id">
-                                            <option v-for="(lesson, index) in lessons" :key="index" :value="lesson.id">{{ lesson.title }}</option>
+                                            <option v-for="(lesson, index) in lessons" :key="index" :value="lesson.id">
+                                                {{ lesson.title }}</option>
                                         </select>
                                         <div v-if="errors.lesson_id" class="alert alert-danger mt-2">
                                             {{ errors.lesson_id }}
@@ -36,7 +40,8 @@
                                     <div class="mb-4">
                                         <label>Kelas</label>
                                         <select class="form-select" v-model="form.classroom_id">
-                                            <option v-for="(classroom, index) in classrooms" :key="index" :value="classroom.id">{{ classroom.title }}</option>
+                                            <option v-for="(classroom, index) in classrooms" :key="index"
+                                                :value="classroom.id">{{ classroom.title }}</option>
                                         </select>
                                         <div v-if="errors.classroom_id" class="alert alert-danger mt-2">
                                             {{ errors.classroom_id }}
@@ -48,15 +53,12 @@
 
                             <div class="mb-4">
                                 <label>Deskripsi</label>
-                                <Editor
-                                    api-key="no-api-key"
-                                    v-model="form.description"
-                                    :init="{
+                                <Editor api-key="'bepezp5d90820v5lat1y5yomgvk17f14nksbujco7z7w2v9l'"
+                                    v-model="form.description" :init="{
                                         menubar: false,
                                         plugins: 'lists link image emoticons',
                                         toolbar: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons'
-                                    }"
-                                />
+                                    }" />
                                 <div v-if="errors.description" class="alert alert-danger mt-2">
                                     {{ errors.description }}
                                 </div>
@@ -105,7 +107,8 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label>Durasi (Menit)</label>
-                                        <input type="number" min="1" class="form-control" placeholder="Masukkan Durasi Ujian (Menit)" v-model="form.duration">
+                                        <input type="number" min="1" class="form-control"
+                                            placeholder="Masukkan Durasi Ujian (Menit)" v-model="form.duration">
                                         <div v-if="errors.duration" class="alert alert-danger mt-2">
                                             {{ errors.duration }}
                                         </div>
@@ -219,6 +222,4 @@ export default {
 
 </script>
 
-<style>
-
-</style>
+<style></style>
